@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<!-- El navbar de arriba y las cosas de boostrap -->
+{% include "partials/header.html" %}
+
+    <!-- El contenido debajo del navbar -->
+
+        <main class="container">
+                
+            <h2>Login</h2>
+
+            <div class="card" id="">
+                <div class="card-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1">Usuario:</label>
+                            <input class="form-control"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1">Senha:</label>
+                            <input class="form-control"></input>
+                        </div>
+                        <hr  />
+                        <a href="{% url "pmo" %}" class="btn btn-primary">Acessar</a>
+                        <a href="#" class="btn btn-danger">Voltar</a>
+                    </form>
+                </div>
+            </div>
+        </main>
+<script>
+    var preguntas = '';
+</script>
+
+{% endblock %}

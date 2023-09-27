@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- El navbar de arriba y las cosas de boostrap -->
+{% include "partials/header.html" %}
+
+    <!-- El contenido debajo del navbar -->
+    <div class="row">
+    
+        <!-- La barra lateral de la izquierda -->
+        {% include "partials/nav_side_bar.html" %}
+        
+        <!-- El contenido de la derecha -->
+        <div class="col ">
+            <div class="row">
+    
+                <!-- Los contenidos de los tab de antes, también llamados tab panels -->
+                <div class="tab-content" id="nav-tabContent">
+                    <main class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label><b>Detalhes da tarefa (Nº de Formularios):</b></label>
+                                        <p>Evento: 0</p>
+                                        <p>Alocações totais: 0</p>
+                                        <p>Para Diligência: 0</p>
+                                        <p>Para Revisão: 0</p>
+                                        <p>Para Aprovar: 0</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img  style="width: auto; height: 300px;" src="https://lh4.googleusercontent.com/eKgfVlAQwf5x8pAp8YJsnvbm8siycLuuPyRj3fsCLYmogQCNCTT0iHG3q8Gek2HMO2SdpxGR63NQs30gpBDndUhLp6r5OU2vgLxGtuP0z-dVTAElyg_G7ksJO4HY_3bQMuJ1Mzgkc7PKkejoVDNDe-pRZQPaQZV5KyRQE8Hof7mlrSCGUe0CH-aH_Mfz" alt="jojojojojojojo">
+                                    </div>
+                                </div>
+                                    <hr  />
+                                <table class="table table-bordered table-hover">
+                                    <tr>
+                                        <th>Indicador</th>
+                                        <th>Qtdd</th>
+                                        <th>Tema</th>
+                                        <th>Material</th>
+                                        <th>Descripción</th>
+                                        <th>Área</th>
+                                        <th>Data de envio</th>
+                                        <th>Última data</th>
+                                        <th>Prazo de Recebimento</th>
+                                        <th>Data de Recebimento</th>
+                                        <th>Enviado para Receber</th>
+                                        <th>Prazo para Receber</th>
+                                        <th>Revisão de Recebimento</th>
+                                        <th>Data final</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                        <td>{{ page.corp}}</td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- El footer -->
+{% include "partials/footer.html" %}
+{% endblock %}

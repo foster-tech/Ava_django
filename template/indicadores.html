@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- El navbar de arriba y las cosas de boostrap -->
+{% include "partials/header.html" %}
+
+    <!-- El contenido debajo del navbar -->
+    <div class="row">
+    
+        <!-- La barra lateral de la izquierda -->
+        {% include "partials/nav_side_bar.html" %}
+        
+        <!-- El contenido de la derecha -->
+        <div class="col ">
+            <div class="row">
+
+                <!-- Los contenidos de los tab de antes, también llamados tab panels -->
+                <div class="tab-content"  id="nav-tabContent">
+
+                    <!-- El tab panel del contenido -->
+                    <div class="tab-pane show active" id="contenido" role="tabpanel" aria-labelledby="contenido-tab" tabindex="0">
+                        <main class="container">
+                                <br  />
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-6">
+                                        <table class="table table-borderless table-hover table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tema Material</th>
+                                                    <th>Indicador</th>
+                                                    <th>Responsavel</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            {% for indicador in indicadores %}                           
+                                                <tr>
+                                                    <td scope="col">{{ indicador.tema }}</td>
+                                                    <td scope="col">{{ indicador.gri }}</td>
+                                                    <td scope="col">{{ indicador.responsavel}}</td>
+                                                    <td scope="col">{{ indicador.status.get_valor_display}}</td>
+                                                    <td scope="col"><a href="{% url "indicador" gri_nome=indicador.gri.nome indicador_id=indicador.id %}">Abrir</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>     
+                </div>
+  
+            </div>
+        </div>     
+    </div>
+{% endblock %}
+    

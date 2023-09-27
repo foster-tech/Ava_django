@@ -1,0 +1,52 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- El navbar de arriba y las cosas de boostrap -->
+{% include "partials/header.html" %}
+
+    <!-- El contenido debajo del navbar -->
+    <div class="row">
+    
+        <!-- La barra lateral de la izquierda -->
+        {% include "partials/nav_side_bar.html" %}
+        
+        <!-- El contenido de la derecha -->
+        <div class="col ">
+            <div class="row">
+                <div class="tab" id="">
+                    <main class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-6">
+                                    <table class="table table-borderless table-hover table-striped">
+                                        <thead>
+                                            GRIs
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>Numero</th>
+                                                <th>Porcentagem</th>
+                                            </tr>
+                                        </thead>
+                                        {% for gri in gris %}
+                                                    <tr>      
+                                                        <td scope="col">{{ gri.nome }}</td>
+                                                        <td scope="col"><a href="{% url "gri" gri_slug=gri.slug %}">{{gri.numero}}</a></td>
+                                                        {% if gri.porcentagem != null %}
+                                                            <td scope="col">{{ gri.porcentagem }}</td>
+                                                        {% endif %}
+                                                    </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>     
+    </div>
+
+{% endblock %}
