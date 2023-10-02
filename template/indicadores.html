@@ -39,7 +39,7 @@
                                                     <td scope="col">{{ indicador.gri }}</td>
                                                     <td scope="col">{{ indicador.responsavel}}</td>
                                                     <td scope="col">{{ indicador.status.get_valor_display}}</td>
-                                                    <td scope="col"><a href="{% url "indicador" gri_nome=indicador.gri.nome indicador_id=indicador.id %}">Abrir</a></td>
+                                                    <td scope="col"><a href="{% url "indicador" gri_numero=indicador.gri.numero indicador_id=indicador.id %}">Abrir</a></td>
                                                 </tr>
                                             {% endfor %}
                                         </table>

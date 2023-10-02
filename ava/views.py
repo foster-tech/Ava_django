@@ -25,8 +25,8 @@ def indicadores(request):
     
     return render(request, 'indicadores.html', context=context)
 
-def indicador(request, gri_nome, indicador_id):
-    gri = get_object_or_404(GRI, nome=gri_nome)
+def indicador(request, gri_numero, indicador_id):
+    gri = get_object_or_404(GRI, numero=gri_numero)
     indicador = get_object_or_404(Indicador, id=indicador_id, gri=gri)
     
     context = {

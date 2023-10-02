@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Indicador,HistoricoIndicador, GRI, Status, UnidadesMedidas
+from .models import Indicador,HistoricoIndicador, GRI, Status, UnidadesMedidas, ConteudoIndicador
 import django.apps
 
 
 @admin.register(Indicador)
 class IndicadorAdmin(admin.ModelAdmin):
-    list_display=('tema', 'gri', 'medida', 'responsavel', 'comentario','categoria', 'data')
+    list_display=('tema', 'gri', 'responsavel', 'comentario','categoria', 'data')
     list_filter=('tema','categoria')
     search_fields=('tema', 'responsavel', 'categoria')
 
@@ -33,6 +33,10 @@ class UnidadesMedidasAdmin(admin.ModelAdmin):
 @admin.register(Status)
 class StatusAdmin(admin.ModelAdmin):
     list_display=['valor']
+    
+@admin.register(ConteudoIndicador)
+class ConteudoIndicadorAdmin(admin.ModelAdmin):
+    list_display=['tema_material', 'topico_gri']
 
         
 

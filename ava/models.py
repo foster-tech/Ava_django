@@ -3,13 +3,12 @@ from datetime import date
 from django.utils.text import slugify
 from usuarios.models import CustomUser, CustomUserManager
 
-
 class GRI(models.Model):
-    nome = models.CharField(max_length = 140)
     porcentagem = models.FloatField(null=True, blank=True, default=None)
     numero = models.CharField(max_length = 140)
-    ano_mudanca = models.IntegerField(blank=True, null=True)
+    ano_mudanca = models.IntegerField(blank=True, null=True, default='GRI-')
     slug = models.SlugField(max_length=100, unique=True, default='', help_text='Numero do GRI ')
+
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.numero)
@@ -19,7 +18,7 @@ class GRI(models.Model):
         return self.numero
     
     def alterar_numero_gri(gri, novo_numero, ano_mudanca):
-        gri.nome = novo_numero
+        gri.numero = novo_numero
         gri.ano_mudanca = ano_mudanca
         gri.save()
 
@@ -78,17 +77,16 @@ class Indicador(models.Model):
     
     tema = models.CharField(max_length = 140)
     gri = models.ForeignKey(GRI, on_delete=models.CASCADE)
-    medida = models.ForeignKey(UnidadesMedidas, on_delete=models.CASCADE)
     responsavel = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     comentario = models.CharField(max_length = 500)
-    status = models.ForeignKey(Status, on_delete=models.CASCADE, help_text='0= Iniciado, 1= Não Iniciado, 2= A Validar, 3= Concluido')
+    status = models.ForeignKey(Status, on_delete=models.CASCADE)
     categoria = models.CharField(choices=CATEGORIA_CHOICES, max_length=140)
     data = models.DateField(("Date"), default=date.today)
     slug = models.SlugField(unique=False, default='', help_text='Nome do Tema')
 
     
     def __str__(self) -> str:
-        return self.gri.nome
+        return self.gri.numero
     
     def get_absolute_url(self):
         return f'indicadores/{self.gri}/{self.id}/'
@@ -108,6 +106,22 @@ class Indicador(models.Model):
         
     def get_status_display(self):
         return self.status.get_status_display()
+
+
+
+
+class ConteudoIndicador(models.Model):
+    decricao = models.TextField()
+    tema_material = models.CharField(max_length = 200, default='')
+    topico_gri = models.CharField(max_length = 200)
+    relevancia = models.TextField()
+    fontes = models.TextField()
+    references = models.TextField(default='')
+    definicoes = models.TextField()
+    
+    def __str__(self) -> str:
+        return self.tema_material
+    
     
 
 class HistoricoIndicador(models.Model):

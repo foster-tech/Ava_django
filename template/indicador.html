@@ -16,11 +16,11 @@
 
 
                 <div class="col-9">
-                    <nav>
+                    <nav>             
                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <button class="nav-link active" id="contenido-tab" data-bs-toggle="tab" data-bs-target="#contenido" type="button" role="tab" aria-controls="contenido" aria-selected="true">Conteudo</button>
-                            <button class="nav-link" id="analisis-tab" data-bs-toggle="tab" data-bs-target="#analisis" type="button" role="tab" aria-controls="analisis" aria-selected="false">Analise</button>
                             <button class="nav-link" id="protocolo-tab" data-bs-toggle="tab" data-bs-target="#protocolo" type="button" role="tab" aria-controls="protocolo" aria-selected="false">Protocolo</button>
+                            <button class="nav-link active" id="contenido-tab" data-bs-toggle="tab" data-bs-target="#contenido" type="button" role="tab" aria-controls="contenido" aria-selected="true">Conteudo</button>
+                            <button class="nav-link" id="analisis-tab" data-bs-toggle="tab" data-bs-target="#analisis" type="button" role="tab" aria-controls="analisis" aria-selected="false">Analise</button>                   
                         </div>
                     </nav>
                 </div>
@@ -39,23 +39,35 @@
                                 <br  />
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Indicador {{ indicador.tema }} {{indicador.gri }}</h5>
-                                    <table class="table table-bordered table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Material</th>
-                                                <th scope="col">{{ indicador.medida.get_volumes_display}}</th>
-                                                <th scope="col">{{ indicador.porcentagem }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                    <tr>
+                                    <h5 class="card-title">Indicador {{ indicador.tema }} GRI-{{indicador.gri.numero }}</h5>
+                                    <p>2.1 Identifique todas as fábricas operadas pela organização onde os produtos são fabricados.<p>
+                                    <p>2.2 Identifique as fábricas que passaram por certificação externa em padrão de segurança alimentar reconhecido internacionalmente (FSSC 22000 (Food Safety System Certification)).<p>
+                                        <table id="minha-tabela" class="table table-bordered table-hover table-striped">
+                                            <thead>
+                                                {{indicador.data}}
+                                                <tr> 
+                                                    <th scope="col">Fabricante</th>
+                                                    <th scope="col">Fabrica</th>
+                                                    <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
+                                                    <th>Ações</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr> 
+                                                        <td >''</td>
                                                         <td>''</td>
-                                                        <td>''</td>
-                                                        <td>''</td>
+                                                            <td>
+                                                                <select class="form-select" aria-label="Default select example">
+                                                                    <option value="1">Sim</option>
+                                                                    <option value="2">Não</option>
+                                                                </select>
+                                                            </td>
+                                                        <td><button type="button" onclick="removerLinha(this)">Excluir</button></td>
                                                     </tr>
-                                        </tbody>
-                                    </table>
+                                            </tbody>                      
+                                        </table>
+                                        <button id="adicionarLinha">Adicionar Linha</button>
                                 </div>
                             </div>
                                 <br  />
@@ -127,7 +139,6 @@
                         </main>
                     </div>
                     
-                    <!-- El tab panel del protocolo -->
                     <div class="tab-pane" id="protocolo" role="tabpanel" aria-labelledby="protocolo-tab" tabindex="0">
                         <main class="container">
                                 <br  />
@@ -194,4 +205,62 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+           const minhaTabela = document.getElementById('minhaTabela');
+           const tbody = minhaTabela.querySelector('tbody');
+           const adicionarLinhaBtn = document.getElementById('adicionarLinha');
+        
+           function adicionarLinha() {
+               const novaLinha = document.createElement('tr');
+               novaLinha.innerHTML = `
+                   <td><input type="text" name="coluna1"></td>
+                   <td><input type="text" name="coluna2"></td>
+                   <td>
+                       <select name="coluna3">
+                           <option value="0">Escolha...</option>
+                           <option value="1">Opção 1</option>
+                       </select>
+                   </td>
+                   <td class="coluna4" style="display:none;"><input type="text" name="coluna4"></td>
+                   <td class="acoes">
+                       <button class="removerLinha">Remover</button>
+                   </td>
+               `;
+               tbody.appendChild(novaLinha);
+           }
+        
+           function removerLinha(event) {
+               const linha = event.target.parentElement.parentElement;
+               tbody.removeChild(linha);
+           }
+        
+           function mostrarOuEsconderColuna4(event) {
+               const select = event.target;
+               const coluna4 = select.parentElement.nextElementSibling;
+               if (select.value === '1') {
+                   coluna4.style.display = 'table-cell';
+               } else {
+                   coluna4.style.display = 'none';
+               }
+           }
+        
+           adicionarLinhaBtn.addEventListener('click', adicionarLinha);
+        
+           tbody.addEventListener('click', function(event) {
+               if (event.target.classList.contains('removerLinha')) {
+                   removerLinha(event);
+               }
+           });
+        
+           tbody.addEventListener('change', function(event) {
+               if (event.target.name === 'coluna3') {
+                   mostrarOuEsconderColuna4(event);
+               }
+           });
+        });
+        </script>
+        
+        
 {% endblock content %}

@@ -21,24 +21,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="mb-6">
-                                    <table class="table table-borderless table-hover table-striped">
-                                        <thead>
-                                            GRIs
-                                            <tr>
-                                                <th>Nome</th>
-                                                <th>Numero</th>
-                                                <th>Porcentagem</th>
-                                            </tr>
-                                        </thead>
-                                        {% for gri in gris %}
-                                                    <tr>      
-                                                        <td scope="col">{{ gri.nome }}</td>
-                                                        <td scope="col"><a href="{% url "gri" gri_slug=gri.slug %}">{{gri.numero}}</a></td>
-                                                        {% if gri.porcentagem != null %}
-                                                            <td scope="col">{{ gri.porcentagem }}</td>
-                                                        {% endif %}
-                                                    </tr>
-                                        {% endfor %}
+                                    <h1>Home</h1>
                                     </table>
                                 </div>
                             </div>
