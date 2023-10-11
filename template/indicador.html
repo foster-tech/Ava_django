@@ -25,9 +25,17 @@
                     </nav>
                 </div>
 
-                <div class="col">
-                    <a class="btn btn-primary" href="#">Salvar Rascunho</a>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Enviar Aprovação</button>
+                <div class="col flex-end">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
+                            <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+                            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                          </svg>
+                    </button>
                 </div>
 
 
@@ -40,42 +48,141 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Indicador {{ indicador.tema }} GRI-{{indicador.gri.numero }}</h5>
+                                    <br />
                                     <p>2.1 Identifique todas as fábricas operadas pela organização onde os produtos são fabricados.<p>
                                     <p>2.2 Identifique as fábricas que passaram por certificação externa em padrão de segurança alimentar reconhecido internacionalmente (FSSC 22000 (Food Safety System Certification)).<p>
-                                        <table id="minha-tabela" class="table table-bordered table-hover table-striped">
-                                            <thead>
-                                                {{indicador.data}}
-                                                <tr> 
-                                                    <th scope="col">Fabricante</th>
-                                                    <th scope="col">Fabrica</th>
-                                                    <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
-                                                    <th>Ações</th>
+                                        {% if conteudo_atual %}
+                                            <div class="card mb-3">
+                                                <div class="card-header">{{ conteudo_atual.ano }}</div>
+                                                <div class="card-body text-primary">
+                                                    <table id="minhaTabelaDinamica" class="table table-bordered table-hover table-striped">
+                                                        <thead>
+                                                            <tr> 
+                                                                <th scope="col">Fabricante</th>
+                                                                <th scope="col">Fabrica</th>
+                                                                <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
+                                                                <th>Se não, favor justificar</th>
+                                                                <th>Ações</th>
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                    <tr> 
-                                                        <td >''</td>
-                                                        <td>''</td>
-                                                            <td>
-                                                                <select class="form-select" aria-label="Default select example">
-                                                                    <option value="1">Sim</option>
-                                                                    <option value="2">Não</option>
-                                                                </select>
-                                                            </td>
-                                                        <td><button type="button" onclick="removerLinha(this)">Excluir</button></td>
-                                                    </tr>
-                                            </tbody>                      
-                                        </table>
-                                        <button id="adicionarLinha">Adicionar Linha</button>
-                                </div>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for grupo in grupos_informacoes %}
+                                                                <tr> 
+                                                                    <td >{{ grupo.fabricante }}</td>
+                                                                    <td>{{ grupo.fabrica }}</td>
+                                                                    <td>
+                                                                        <select class="form-select" class="form-select" aria-label="Default select example" onchange="toggleJustificativa(this)">
+                                                                            <option value="">--Selecione---</option>
+                                                                            <option value="1">Sim</option>
+                                                                            <option value="2">Não</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <div id="justificativaContainer" style="display: none;">
+                                                                            <textarea class="form-control" id="justificativa" name="justificativa" rows="1">Justifique</textarea>
+                                                                        </div>
+                                                                    </td> 
+                                                                    <td>
+                                                                        <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                                                                            </svg>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                        </tbody>                      
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <button onclick="adicionarLinha()" style="border-radius: 10px;" class="btn btn-primary">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="25" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                            </svg>
+                                        </button>
+                                        <br />
+                                        <br />
+                                        {% if conteudos_anteriores %}
+                                            {% for conteudo_anterior in conteudos_anteriores %}
+                                                <div class="card mb-3">
+                                                    <button class="card-header d-flex justify-content-between" id="toggle-content" type="button" data-target="card{{ conteudo_anterior.id }}-body" style="border: none">
+                                                        <div>
+                                                            {{ conteudo_anterior.ano }}
+                                                        </div>
+                                                    </button>
+                                                    <div class="card-body text-primary" id="card{{ conteudo_anterior.id }}-body" style="display:none;">
+                                                        <table class="table table-bordered table-hover table-striped">
+                                                            <thead>
+                                                                <tr> 
+                                                                    <th scope="col">Fabricante</th>
+                                                                    <th scope="col">Fabrica</th>
+                                                                    <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
+                                                                    <th>Se não, favor justificar</th>
+                                                                </tr>
+                                                            </thead>
+                                                            {% with grupos_informacoes=conteudo_anterior.grupoinformacoes_set.all %}
+                                                                {% if grupos_informacoes %}
+                                                                    <tbody>
+                                                                        {% for grupo in grupos_informacoes  %}
+                                                                            <tr> 
+                                                                                <td >{{ grupo.fabricante }}</td>
+                                                                                <td>{{ grupo.fabrica }}</td>
+                                                                                    <td>
+                                                                                        {% if grupo.e_certificada == 1 %}
+                                                                                            Sim
+                                                                                        {% elif grupo.e_certificada == 2 %}
+                                                                                            Não
+                                                                                        {% endif %}
+                                                                                    </td>
+                                                                                {% if grupo.e_certificada == 2 %}
+                                                                                    <td>
+                                                                                        {{grupo.justificativa}}
+                                                                                    </td>
+                                                                                {% endif %}   
+                                                                            </tr>
+                                                                        {% endfor %}
+                                                                    </tbody>  
+                                                                {% endif %}
+                                                            {% endwith %}                     
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                
+                                            {% endfor %}
+                                        {% endif %}
+                                    
+                                    <br />
+                                    <br />
+                                    <p>2.3 Por favor, descreva o processo da organização para identificar e gerenciar produtos e ingredientes de interesse e preferências emergentes de dietas, identificando o ano do qual a informação pertence.</p>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                </div> 
                             </div>
                                 <br  />
-                            <h4>Perguntas</h4>
-                            <input type="text" class="form-control">
-                            <input type="text" class="form-control" disabled>
-                                <br  />
-                            <h4>Histórico de Alterações:</h4>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Questões Gerais</h6>
+                                        <p>3.1 Relate como os dados usados para compor esse conteúdo foram coletados e indique caso tenha ocorrido alguma  mudança na forma de medição ou controle  dos dados em relação aos anos anteriores.<p>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <br/>
+                                        <p>3.2 Analise e justifique o resultado do desempenho do conteúdo e explique variação de desempenho em relação aos anos  anteriores.<p>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <br/>
+                                        <p>3.3 As informações reportadas passam ou passaram por auditoria interna? Se sim, por favor, especifique o processo  utilizado ou a referência ou norma em que se baseou.<p>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <br/>
+                                        <p>3.4 A área possui metas específicas para esse indicador? Se sim, favor especificar.<p>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <br/>
+                                        <p>3.5 Comentários adicionais<p>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    </div> 
+                                </div>
+                            <br/>
+                            <h4 style="margin-bottom: 15px">Histórico de Alterações:</h4>
                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                     <div class="accordion-item">
                                             <h2 class="accordion-header" id="panelsStayOpen-heading">
@@ -88,20 +195,18 @@
                                                     <table class="table table-bordered table-hover table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th scope="col">Novo Status</th>
+                                                                <th scope="col">Ação</th>
                                                                 <th scope="col">Data Alterada</th>
                                                                 <th scope="col">Realizado por:</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {% for historico in indicador.historicoindicador_set.all %}
                                                                         <tr> 
-                                                                            <td>{{ historico.novo_status }}</td>
-                                                                            <td>{{ historico.data_alteracao }}</td>
-                                                                            <td>{{ historico.responsavel }}</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
                                                                             
                                                                         </tr>
-                                                            {% endfor %}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -145,16 +250,24 @@
                             <div id="parametros">
                                 <div class="card">
                                     <div class="card-body">
-                                                <label><b>´´</b></label>
-                                                <p>´´</p>
-                                                <label><b>Material:</b></label>
-                                                <p>´´</p>
+                                                <h5>Conteudo {{indicador.gri.numero }}</h5>
+                                                <br/>
+                                                <label><b>Descrição</b></label>
+                                                <p>{{protocolo.decricao}}</p>
+                                                <label><b>Tema Material:</b></label>
+                                                <p>{{ indicador.tema }} </p>
                                                 <label><b>Tópico GRI:</b></label>
-                                                <p>´´</p>
+                                                <p>{{protocolo.topico_gri}}</p>
                                                 <label><b>Relevância do Conteúdo:</b></label>
-                                                <p>´´</p>
+                                                <p>{{protocolo.relevancia}}</p>
                                                 <label><b>Fontes de Documentação:</b></label>
-                                                <p>p</p>
+                                                <p>{{protocolo.fontes}}</p>
+                                                {% if protocolo.references %}
+                                                    <label><b>References:</b></label>
+                                                    <p>{{protocolo.references}}</p>
+                                                {% endif %}
+                                                <label><b>Definições:</b></label>
+                                                <p>{{protocolo.definicoes}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -206,61 +319,145 @@
         </div>
     </div>
 
+    <div class="modal fade" id="confirmacaoModal" tabindex="-1" aria-labelledby="confirmacaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmacaoModalLabel">Confirmação</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir esta linha?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarExcluir">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-           const minhaTabela = document.getElementById('minhaTabela');
-           const tbody = minhaTabela.querySelector('tbody');
-           const adicionarLinhaBtn = document.getElementById('adicionarLinha');
         
-           function adicionarLinha() {
-               const novaLinha = document.createElement('tr');
-               novaLinha.innerHTML = `
-                   <td><input type="text" name="coluna1"></td>
-                   <td><input type="text" name="coluna2"></td>
-                   <td>
-                       <select name="coluna3">
-                           <option value="0">Escolha...</option>
-                           <option value="1">Opção 1</option>
-                       </select>
-                   </td>
-                   <td class="coluna4" style="display:none;"><input type="text" name="coluna4"></td>
-                   <td class="acoes">
-                       <button class="removerLinha">Remover</button>
-                   </td>
-               `;
-               tbody.appendChild(novaLinha);
-           }
-        
-           function removerLinha(event) {
-               const linha = event.target.parentElement.parentElement;
-               tbody.removeChild(linha);
-           }
-        
-           function mostrarOuEsconderColuna4(event) {
-               const select = event.target;
-               const coluna4 = select.parentElement.nextElementSibling;
-               if (select.value === '1') {
-                   coluna4.style.display = 'table-cell';
-               } else {
-                   coluna4.style.display = 'none';
-               }
-           }
-        
-           adicionarLinhaBtn.addEventListener('click', adicionarLinha);
-        
-           tbody.addEventListener('click', function(event) {
-               if (event.target.classList.contains('removerLinha')) {
-                   removerLinha(event);
-               }
-           });
-        
-           tbody.addEventListener('change', function(event) {
-               if (event.target.name === 'coluna3') {
-                   mostrarOuEsconderColuna4(event);
-               }
-           });
+        document.querySelectorAll('#toggle-content').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.dataset.target;
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement.style.display === 'none' || targetElement.style.display === '') {
+                    targetElement.style.display = 'block';
+                } else {
+                    targetElement.style.display = 'none';
+                }
+            });
         });
-        </script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleButtons = document.querySelectorAll('.toggle-content');
+        
+            toggleButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const targetID = this.dataset.target; // Obtém o ID do target do botão
+                    const content = document.getElementById(targetID);
+        
+                    if (content) {
+                        content.classList.toggle('d-none');
+                    }
+                });
+            });
+        });
+        
+
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const table = this.parentElement.parentElement.nextElementSibling;
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                } else {
+                    table.style.display = 'none';
+                }
+            });
+        });
+
+        function excluirLinha(botao) {
+            var linha = botao.parentNode.parentNode;
+        $('#confirmacaoModal').modal('show');
+
+        // Adiciona um event listener para o botão de confirmação dentro do modal de confirmação
+        document.getElementById('confirmarExcluir').addEventListener('click', function() {
+            // Ao confirmar, a linha será excluída
+            linha.parentNode.removeChild(linha);
+            // Fecha o modal de confirmação
+            $('#confirmacaoModal').modal('hide');
+        });
+        }
+
+        function adicionarLinha() {
+            var tabela = document.querySelector('#minhaTabelaDinamica tbody'); 
+            var numLinhas = tabela.getElementsByTagName('tr').length;
+        
+            var novaLinha = document.createElement('tr');
+            novaLinha.id = 'linha_' + numLinhas; // Adiciona um ID único para a nova linha
+        
+            novaLinha.innerHTML = `
+                <td><textarea class="form-control" rows="1"></textarea></td>
+                <td><textarea class="form-control" rows="1"></textarea></td>
+                <td>
+                    <select class="form-select" aria-label="Default select example" onchange="toggleJustificativa(this)">
+                        <option value="">--Selecione---</option>
+                        <option value="1">Sim</option>
+                        <option value="2">Não</option>
+                    </select>
+                </td>
+                <td>
+                    <div class="justificativaContainer" style="display: none;">
+                        <textarea class="form-control justificativaTextarea" rows="1">Justifique</textarea>
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                        </svg>
+                    </button>
+                </td>
+            `;
+        
+            tabela.appendChild(novaLinha);
+        
+            // Adicione o evento de change para o novo elemento de seleção
+            novaLinha.querySelector('.form-select').addEventListener('change', function() {
+                toggleJustificativa(this);
+            });
+        }
+        
+        function toggleJustificativa(selectElement) {
+            var linha = selectElement.closest('tr'); // Obtém a linha atual
+            var justificativaContainer = linha.querySelector('.justificativaContainer');
+            var justificativaTextarea = justificativaContainer.querySelector('.justificativaTextarea');
+            
+            if (selectElement.value == '2') {
+                justificativaContainer.style.display = 'block';
+                justificativaTextarea.required = true;
+            } else {
+                justificativaContainer.style.display = 'none';
+                justificativaTextarea.required = false;
+            }
+        }
+        
+        // Associar o evento de toggleJustificativa para os elementos de seleção existentes
+        novaLinha.querySelector('.form-select').addEventListener('change', function() {
+            toggleJustificativa(this);
+        });
         
         
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
 {% endblock content %}

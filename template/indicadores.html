@@ -29,7 +29,8 @@
                                                 <tr>
                                                     <th>Tema Material</th>
                                                     <th>Indicador</th>
-                                                    <th>Responsavel</th>
+                                                    <th>Responsaveis</th>
+                                                    <th>Validadores</th>
                                                     <th>Estado</th>
                                                 </tr>
                                             </thead>
@@ -37,7 +38,16 @@
                                                 <tr>
                                                     <td scope="col">{{ indicador.tema }}</td>
                                                     <td scope="col">{{ indicador.gri }}</td>
-                                                    <td scope="col">{{ indicador.responsavel}}</td>
+                                                    <td scope="col">
+                                                        {% for responsavel in indicador.responsaveis.all %}
+                                                            {{ responsavel.nome }}<br>
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td scope="col">
+                                                        {% for validador in indicador.validadores.all %}
+                                                            {{ validador.nome }}<br>
+                                                        {% endfor %}
+                                                    </td>
                                                     <td scope="col">{{ indicador.status.get_valor_display}}</td>
                                                     <td scope="col"><a href="{% url "indicador" gri_numero=indicador.gri.numero indicador_id=indicador.id %}">Abrir</a></td>
                                                 </tr>
