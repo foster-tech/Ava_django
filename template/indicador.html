@@ -50,7 +50,9 @@
                                     <h5 class="card-title">Indicador {{ indicador.tema }} GRI-{{indicador.gri.numero }}</h5>
                                     <br />
                                     <p>2.1 Identifique todas as fábricas operadas pela organização onde os produtos são fabricados.<p>
-                                    <p>2.2 Identifique as fábricas que passaram por certificação externa em padrão de segurança alimentar reconhecido internacionalmente (FSSC 22000 (Food Safety System Certification)).<p>
+                                    {% if indicador.info %}
+                                        <p>{{indicador.info}}<p>
+                                    {% endif %}
                                         {% if conteudo_atual %}
                                             <div class="card mb-3">
                                                 <div class="card-header">{{ conteudo_atual.ano }}</div>
@@ -60,29 +62,22 @@
                                                             <tr> 
                                                                 <th scope="col">Fabricante</th>
                                                                 <th scope="col">Fabrica</th>
-                                                                <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
-                                                                <th>Se não, favor justificar</th>
+                                                                {% for chave, valor in indicador.colunas.items %}
+                                                                    <th scope="col">{{ valor }}</th>
+                                                                {% endfor %}
                                                                 <th>Ações</th>
 
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                        {% with grupos_informacoes=conteudo_atual.grupoinformacoes_set.all %}
                                                             {% for grupo in grupos_informacoes %}
                                                                 <tr> 
                                                                     <td >{{ grupo.fabricante }}</td>
                                                                     <td>{{ grupo.fabrica }}</td>
-                                                                    <td>
-                                                                        <select class="form-select" class="form-select" aria-label="Default select example" onchange="toggleJustificativa(this)">
-                                                                            <option value="">--Selecione---</option>
-                                                                            <option value="1">Sim</option>
-                                                                            <option value="2">Não</option>
-                                                                        </select>
-                                                                    </td>
-                                                                    <td>
-                                                                        <div id="justificativaContainer" style="display: none;">
-                                                                            <textarea class="form-control" id="justificativa" name="justificativa" rows="1">Justifique</textarea>
-                                                                        </div>
-                                                                    </td> 
+                                                                    {% for chave, valor in indicador.colunas.items %}
+                                                                    <td><textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea></td>
+                                                                    {% endfor %} 
                                                                     <td>
                                                                         <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
                                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -93,8 +88,12 @@
                                                                     </td>
                                                                 </tr>
                                                             {% endfor %}
+                                                        {% endwith %}
                                                         </tbody>                      
                                                     </table>
+                                                    <br />
+                                                    <p style="color: black">{{ indicador.pergunta }}</p>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                                 </div>
                                             </div>
                                         {% endif %}
@@ -119,9 +118,10 @@
                                                             <thead>
                                                                 <tr> 
                                                                     <th scope="col">Fabricante</th>
-                                                                    <th scope="col">Fabrica</th>
-                                                                    <th scope="col"><span>A fábrica é certificada no padrão FSSC 22000 (Food Safety System Certification)?</span></th>
-                                                                    <th>Se não, favor justificar</th>
+                                                                <th scope="col">Fabrica</th>
+                                                                {% for chave, valor in indicador.colunas.items %}
+                                                                    <th scope="col">{{ valor }}</th>
+                                                                {% endfor %}
                                                                 </tr>
                                                             </thead>
                                                             {% with grupos_informacoes=conteudo_anterior.grupoinformacoes_set.all %}
@@ -131,34 +131,25 @@
                                                                             <tr> 
                                                                                 <td >{{ grupo.fabricante }}</td>
                                                                                 <td>{{ grupo.fabrica }}</td>
-                                                                                    <td>
-                                                                                        {% if grupo.e_certificada == 1 %}
-                                                                                            Sim
-                                                                                        {% elif grupo.e_certificada == 2 %}
-                                                                                            Não
-                                                                                        {% endif %}
-                                                                                    </td>
-                                                                                {% if grupo.e_certificada == 2 %}
-                                                                                    <td>
-                                                                                        {{grupo.justificativa}}
-                                                                                    </td>
-                                                                                {% endif %}   
+                                                                                {% for chave, valor in indicador.colunas.items %}
+                                                                                <td></td>
+                                                                                {% endfor %} 
                                                                             </tr>
                                                                         {% endfor %}
                                                                     </tbody>  
                                                                 {% endif %}
                                                             {% endwith %}                     
                                                         </table>
+                                                        <br />
+                                                        <p style="color: black">{{ indicador.pergunta }}</p>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled>{{conteudo_anterior.resp_indicador}}</textarea>
                                                     </div>
+                                                    
                                                 </div>
                                                 
                                             {% endfor %}
-                                        {% endif %}
-                                    
-                                    <br />
-                                    <br />
-                                    <p>2.3 Por favor, descreva o processo da organização para identificar e gerenciar produtos e ingredientes de interesse e preferências emergentes de dietas, identificando o ano do qual a informação pertence.</p>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        {% endif %}                                  
+                                    <br />                     
                                 </div> 
                             </div>
                                 <br  />

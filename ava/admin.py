@@ -1,14 +1,18 @@
 from django.contrib import admin
-from .forms import IndicadorAdminForm
-from .models import Indicador,HistoricoIndicador, GRI, Status, UnidadesMedidas, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes
+from .forms import IndicadorAdminForm, GrupoInformacoesForm
+from .models import Indicador,HistoricoIndicador, GRI, Status, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes, Fabrica, Fabricante
 import django.apps
 
+@admin.register(Fabrica)
+class FabricaAdmin(admin.ModelAdmin):
+    ordering = ['nome']
 
 @admin.register(Indicador)
 class IndicadorAdmin(admin.ModelAdmin):
     form = IndicadorAdminForm
-    list_display = ('tema', 'gri', 'comentario', 'categoria', 'ano_criacao')
+    list_display = ('tema', 'gri', 'comentario', 'categoria', 'ano_criacao', 'resposta', 'pergunta')
     list_filter = ('tema', 'categoria')
+    list_editable = ('resposta',)
     search_fields = ('tema', 'categoria')
     filter_horizontal = ('responsaveis', 'validadores') 
 
@@ -32,12 +36,6 @@ class IndicadorAdmin(admin.ModelAdmin):
                     )
             super().save_model(request, obj, form, change)
 
-@admin.register(UnidadesMedidas)
-class UnidadesMedidasAdmin(admin.ModelAdmin):
-    list_display=('medidas', 'volumes')
-    list_filter=('medidas', 'volumes')
-    search_fields=('medidas', 'volumes')
-
 @admin.register(Status)
 class StatusAdmin(admin.ModelAdmin):
     list_display=['valor']
@@ -48,11 +46,14 @@ class ProtocoloGRIAdmin(admin.ModelAdmin):
 
 class GrupoInformacoesInline(admin.TabularInline):
     model = GrupoInformacoes
+    form = GrupoInformacoesForm
     
 @admin.register(DadosConteudoIndicador)
 class DadosConteudoIndicadorAdmin(admin.ModelAdmin):
     inlines = [GrupoInformacoesInline]
     list_display=('indicador', 'ano')
+    
+
 
         
 

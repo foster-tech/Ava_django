@@ -4,6 +4,26 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 from usuarios.models import CustomUser, CustomUserManager
 
+class Empresa(models.Model):
+    nome = models.CharField(max_length = 140)
+    
+    def __str__(self) -> str:
+        return self.nome
+
+class Fabricante(models.Model):
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, default=0)
+    nome = models.CharField(max_length= 140)
+    
+    def __str__(self) -> str:
+        return self.nome
+
+class Fabrica(models.Model):
+    nome = models.CharField( max_length=50)
+    fabricantes = models.ForeignKey(Fabricante, on_delete=models.CASCADE, default=1)
+    
+    def __str__(self) -> str:
+        return self.nome
+
 class GRI(models.Model):
     porcentagem = models.FloatField(null=True, blank=True, default=None)
     numero = models.CharField(max_length = 140)
@@ -42,30 +62,6 @@ class Status(models.Model):
     def __str__(self) -> str:
         return self.get_valor_display()
     
-
-class UnidadesMedidas(models.Model):
-    VOLUMES_CHOICES = [
-        ('l', 'Litros'),
-        ('kg', 'Quilogramas'),
-        ('m3', 'Metro Cúbico'),
-        ('m', 'Metros' ),
-        ('g', 'Gramas'),
-    ]
-    
-    MEDIDAS_CHOICES = [
-        ('capacidade', 'Capacidade'),
-        ('comprimento', 'Comprimento'),
-        ('massa','Massa' ),
-        ('volume', 'Volume' ),
-    ]
-    
-    medidas = models.CharField(choices=MEDIDAS_CHOICES, max_length=140)  
-    volumes = models.CharField(choices=VOLUMES_CHOICES, max_length=140)
-    
-    def __str__(self) -> str:
-        return self.get_volumes_display()
-    
-    
 class Indicador(models.Model):
     
     CATEGORIA_CHOICES = [
@@ -82,7 +78,12 @@ class Indicador(models.Model):
     comentario = models.CharField(max_length = 500)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     categoria = models.CharField(choices=CATEGORIA_CHOICES, max_length=140)
+    info = models.TextField(blank=True, null=True)
+    pergunta = models.TextField(default="")
+    resposta = models.TextField(blank=True, null=True)
     ano_criacao  = models.IntegerField(default=datetime.now().year)
+    colunas = models.JSONField(blank=True, null=True)
+    dados = models.JSONField(blank=True, null=True)
     slug = models.SlugField(unique=False, default='', help_text='Nome do Tema')
 
     def save(self, *args, **kwargs):
@@ -94,10 +95,7 @@ class Indicador(models.Model):
             raise ValidationError("Você só pode adicionar até 4 responsáveis.")
         
         if self.validadores.count() > 4:
-            raise ValidationError("Você só pode adicionar até 4 validadores.")
-        
-        
-        
+            raise ValidationError("Você só pode adicionar até 4 validadores.")   
     
     def __str__(self) -> str:
         return self.gri.numero
@@ -113,32 +111,27 @@ class Indicador(models.Model):
         
     def get_status_display(self):
         return self.status.get_status_display()
+    
 
 class DadosConteudoIndicador(models.Model):
     indicador = models.ForeignKey(Indicador, on_delete=models.CASCADE, default='')
     ano = models.PositiveIntegerField(default=1999)
+    resp_indicador = models.TextField(blank=True, null=True)
+    
     
        
 
 class GrupoInformacoes(models.Model):
-    CERTIFICADA = [
-        (1, 'Sim'),
-        (2, 'Não'),
-    ]
-    
     dados_conteudo = models.ForeignKey(DadosConteudoIndicador, on_delete=models.CASCADE)
-    fabricante = models.CharField(max_length=150)
-    fabrica = models.CharField(max_length=150)
-    e_certificada = models.IntegerField(choices=CERTIFICADA)
-    justificativa = models.TextField(blank=True, null=True)
+    fabricante = models.ForeignKey(Fabricante, on_delete=models.CASCADE)
+    fabrica = models.ForeignKey(Fabrica, on_delete=models.CASCADE) 
+
 
     def definir_justificativa(self):
         if self.e_certificada == 2:
             self.justificativa = "Justificativa aqui"
         else:
             self.justificativa = ""
-
-    
 
 
 class HistoricoIndicador(models.Model):

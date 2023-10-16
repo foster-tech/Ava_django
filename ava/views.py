@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from datetime import date
-from .models import Indicador, GRI, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes
+from .models import Indicador, GRI, ProtocoloGRI, DadosConteudoIndicador
 
 def index(request):
     
@@ -32,15 +32,13 @@ def indicador(request, gri_numero, indicador_id):
     conteudo_atual = DadosConteudoIndicador.objects.filter(indicador=indicador, ano=date.today().year).first()
     conteudos_anteriores = DadosConteudoIndicador.objects.filter(indicador=indicador).exclude(ano=date.today().year)
     protocolo = ProtocoloGRI.objects.get(gri=indicador.gri)
-    
-    grupos_informacoes = GrupoInformacoes.objects.filter(dados_conteudo=conteudo_atual)
+
 
     context = {
         'indicador': indicador,
         'protocolo': protocolo,
         'conteudo_atual': conteudo_atual,
         'conteudos_anteriores': conteudos_anteriores,
-        'grupos_informacoes': grupos_informacoes
     }
     
     
