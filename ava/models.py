@@ -1,9 +1,17 @@
 from django.db import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from month.models import MonthField
 from usuarios.models import CustomUser, CustomUserManager
+# models.py em meu_app
+from django.db import models
 
+class Tarefa(models.Model):
+    nome = models.CharField(max_length=100)
+    data_inicio = models.DateField(default='1999-01-01')
+    duracao_semanas = models.PositiveIntegerField(default=0)
+    
 class Empresa(models.Model):
     nome = models.CharField(max_length = 140)
     
@@ -79,7 +87,6 @@ class Indicador(models.Model):
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     categoria = models.CharField(choices=CATEGORIA_CHOICES, max_length=140)
     info = models.TextField(blank=True, null=True)
-    pergunta = models.TextField(default="")
     resposta = models.TextField(blank=True, null=True)
     ano_criacao  = models.IntegerField(default=datetime.now().year)
     colunas = models.JSONField(blank=True, null=True)
@@ -118,20 +125,16 @@ class DadosConteudoIndicador(models.Model):
     ano = models.PositiveIntegerField(default=1999)
     resp_indicador = models.TextField(blank=True, null=True)
     
-    
+ 
+class Perguntas(models.Model):
+    indicador = models.ForeignKey(Indicador, on_delete=models.CASCADE)
+    pergunta = models.TextField(default="") 
        
 
 class GrupoInformacoes(models.Model):
     dados_conteudo = models.ForeignKey(DadosConteudoIndicador, on_delete=models.CASCADE)
     fabricante = models.ForeignKey(Fabricante, on_delete=models.CASCADE)
     fabrica = models.ForeignKey(Fabrica, on_delete=models.CASCADE) 
-
-
-    def definir_justificativa(self):
-        if self.e_certificada == 2:
-            self.justificativa = "Justificativa aqui"
-        else:
-            self.justificativa = ""
 
 
 class HistoricoIndicador(models.Model):

@@ -1,6 +1,10 @@
 
-<div class="col-2 " style="color: black;">
-    <div style="margin: 10%;">
+{% load static %}
+
+
+<div class="col-2 " style="position: fixed; height:100%">
+    <img style="margin-left: 8%;" src="{% static '/img/cc.png'  %}" width="60%" height="90px"/>
+    <div style="margin-left: 8%; ">
         <ul class="list-group list-group-flush" id="links" >
             <li class="list-group-item">
                     <a href="{% url "index" %}" class="nav-link active" aria-current="page">
@@ -9,7 +13,7 @@
                         </svg>
                         Painel 
                     </a>
-                </li>
+             </li>
             
             <li class="d-flex flex-column justify-content-around list-group-item">
                 <label>Indicadores</label>

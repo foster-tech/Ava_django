@@ -1,4 +1,6 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light mb-4">
+{% load static %}
+
+<nav class="navbar navbar-expand-md" style="background-color: #6ba39c1b">
     <div class="container-fluid">
 
         <!-- La parte de la izquierda del navbar -->
@@ -7,7 +9,7 @@
         {% else %}
             <a style="position: relative;" class="navbar-brand" href="/">
         {% endif %}
-                <img width="75" src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Ava2.png" alt="DeberíaIrUnLogoAquí">
+                <img style="margin-left: 20px" width="75" src="{% static '/img/ava.png'  %}" alt="DeberíaIrUnLogoAquí">
             </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -45,7 +47,7 @@
                 </li>
                 <li class="nav-item col-4">
                     <div class="dropdown">
-                        <img style="border-radius: 50%; cursor: pointer;" width="25" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRObzPFR9Q0QbDCka6pl_MtGFW6a9zKoJOh0w&usqp=CAU" class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20">
+                        <img style="border-radius: 50%; cursor: pointer;" width="25" src="{% static '/img/contact.jpg'  %}" class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20">
                         <div class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" href="#">Opción de Usuario 1</a>
                             <a class="dropdown-item" href="#">Opción de Usuario 2</a>

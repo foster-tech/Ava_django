@@ -14,15 +14,80 @@
         {% include "partials/nav_side_bar.html" %}
         
         <!-- El contenido de la derecha -->
-        <div class="col ">
+        <div class="col mt-4" style="margin-left: 100px">
             <div class="row">
                 <div class="tab" id="">
                     <main class="container">
                         <div class="card">
-                            <div class="card-body">
-                                <div class="mb-6">
-                                    <h1>Painel</h1>
-                                    </table>
+                            <div class="card-body p-4">
+                              <div class="d-flex flex-row mt-2 justify-content-start">
+                                <div style="padding-right: 7px">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
+                                  <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                </svg>
+                              </div>
+                                <h5>Painel</h5>
+
+                              </div>
+                              <br/>
+                                <div class="d-flex flex-row mt-2 justify-content-center">
+                                    <div class="card" style="margin-right: 20px; width:40%;">
+                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Detalhes</h5>
+                                        <div class="card-body d-flex flex-row justify-content-end" style="font-size: 18px;">
+                                            <div class="d-flex flex-column align-items-end" style="padding-top: 20px; padding-right: 40px">
+                                                <div class="headD">Ano</div>
+                                                <div class="headD">Indicadores</div>
+                                                <div class="headD">Pontos Focais</div>
+                                                <div class="headD">Aprovadores</div>
+                                            </div>
+                                            <div class="d-flex flex-column align-items-start" style="padding: 20px">
+                                                <div class="b-resutl">{{ano_atual}}</div>
+                                                <div class="b-resutl">{{total_indicadores}}</div>
+                                                <div class="b-resutl">33</div>
+                                                <div class="b-resutl">22</div>
+                                            </div>
+                                                
+                                        </div>
+                                    </div>
+                                    <div class="card" style="width:60%;">
+                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Status Indicadores</h5>
+                                        <div class="card-body d-flex flex-column mt-2 align-items-center">
+                                            <canvas id="meuGrafico" width="700" height="180"></canvas>
+                                            <div id="legendaGrafico" class="d-flex flex-row"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+
+                                <div class="d-flex flex-row mt-2 justify-content-center">
+                                    <div class="card" style="width:100%;">
+                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Cronograma</h5>
+                                        <div class="card-body" style="background-color: #6ba39c3b">
+                                            <div class="calendar" id="calendar-app" style="background-color: #fff">
+                                                <div class="calendar--view" id="calendar-view">
+                                                  <div class="cview__month">
+                                                    <span class="cview__month-last" id="calendar-month-last">Apr</span>
+                                                    <span class="cview__month-current" id="calendar-month">May</span>
+                                                    <span class="cview__month-next" id="calendar-month-next">Jun</span>
+                                                  </div>
+                                                  <div class="cview__header">Sun</div>
+                                                  <div class="cview__header">Mon</div>
+                                                  <div class="cview__header">Tue</div>
+                                                  <div class="cview__header">Wed</div>
+                                                  <div class="cview__header">Thu</div>
+                                                  <div class="cview__header">Fri</div>
+                                                  <div class="cview__header">Sat</div>
+                                                  <div class="calendar--view" id="dates">
+                                                  </div>
+                                                </div>
+                                                <div class="footer">
+                                                  <span><span id="footer-date" class="footer__link">Hoje é ...</span></span>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -32,4 +97,683 @@
         </div>     
     </div>
 
+    <style>
+        .b-resutl{
+            border: 1px solid;
+            width: 80px;
+            text-align: center;
+            margin-bottom : 10px;
+            border-radius: 6px;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* offsetX, offsetY, blurRadius, color */
+            font-weight: bold;
+        }
+
+        .headD{
+            font-size: 20px;
+            margin-bottom: 7px
+        }
+          
+        #legendaGrafico{
+            margin-top: 16px;
+            
+        }
+
+        .calendar{
+            color: black;
+            margin: 10px auto;
+            padding: 30px 40px 80px 40px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 6px rgba(2,2,2,0.2);
+            position: relative;
+          }
+          .calendar__title{
+            text-align: center;
+          }
+
+
+          .day-highlight, .day-add-event{
+            padding: 8px 10px;
+            margin: 12px 15px;
+            border-radius: 4px;
+            background: #e7e8e8;
+            color: #222;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: "Avenir", sans-serif;
+          }
+          .lin{
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+          }
+          .lin .qtr{
+            width: 40%;
+          }
+          .lin .half{
+            width: 100%;
+          }
+          @media (min-width: 800px){
+            .lin{
+              flex-wrap: nowrap;
+            }
+            .lin .half{
+              width: 35%;
+            }
+            .lin .qtr{
+              width: 25%;
+            }
+          }
+          
+          @keyframes shake {
+            20%, 60%{
+              transform: translateX(4px);
+            }
+            40%, 80%{
+              transform: translateX(-4px);
+            }
+          }
+
+          .calendar--view{
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: flex-start;
+            width: 100%;
+          }
+          .cview__month{
+            width: 100%;
+            text-align: center;
+            font-weight: 800;
+            font-size: 22px;
+            font-family: 'Avenir', sans-serif;
+            padding-bottom: 20px;
+            color: #222;
+            text-transform: uppercase;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: baseline;
+            justify-content: space-around;
+          }
+          .cview__month-last,.cview__month-next,.cview__month-current{
+            width: 33.33333%;
+            text-align: center;
+            font-size: 16px;
+            cursor: pointer;
+            color: #222;
+          }
+          
+          .cview__month-current{
+            font-size: 22px;
+            cursor: default;
+            animation: popIn 200ms 1 forwards;
+            transform: translateY(20px);
+            opacity: 0;
+            position: relative;
+          }
+          .cview__month-reset{
+            animation: none;
+          }
+          .cview__month-activate{
+            animation: popIn 100ms 1 forwards;
+          }
+          .cview--spacer, .cview__header, .cview--date{
+            width: 14.28571428571429%;
+            max-width: 14.28571428571429%;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: clip;
+            font-size: 14px;
+            font-weight: 900;
+          }
+          .cview--date{
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+          }
+          .cview--date:hover::before{
+            background: rgba(255,255,255,0.2);
+          }
+
+          .cview--date.today{
+            color: #111;  
+          }
+          .cview--date.today::before{
+            animation: popIn 200ms 1 forwards;
+            background: rgba(255,255,255,0.2);
+            transform: scale(0);
+          }
+          @keyframes popIn{
+          
+            100%{
+              transform: scale(1);
+              opacity: 1;
+            }
+          }
+          .cview--date::before{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            transform: scale(0.8);
+            z-index: 0;
+          }
+          .footer{
+            width: 100%;
+            bottom: 50px;
+            left: 0;
+            position: absolute;
+            font-size: 14px;
+            text-align: center;
+          }
+          .footer__link{
+            cursor: pointer;
+            padding: 2px
+
+        
+    </style>
+
+    <script>
+        var data = {{data|safe}}
+        var labels = {{labels|safe}}
+
+        var totalIndicadores = data.reduce((a, b) => a + b, 0);
+
+        var porcentagens = data.map(function(valor) {
+            return ((valor / totalIndicadores) * 100).toFixed(0);});
+
+        new Chart(document.getElementById("meuGrafico"), {
+            type: 'horizontalBar',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: false,
+                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+                  data: data
+                }
+              ]
+            },
+            options: {
+              legend: { display: false },
+              title: {
+                display: false,
+              },  scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0,
+                        callback: function(value, index, values) {
+                            return Math.round(value);
+                        }
+                    }
+                },
+                x: { // Adicionado para configurar os ticks no eixo x
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1, // Define a unidade de passo (1 para números inteiros)
+                        callback: function(value, index, values) {
+                            return Math.round(value);
+                        }
+                    }
+                }
+              }
+            }
+        });
+
+        var legendas = labels.map(function(label, index) {
+            return label + ": " + porcentagens[index] + "%";
+        });
+        
+        var legendaDiv = document.getElementById('legendaGrafico');
+        for (var i = 0; i < labels.length; i++) {
+         var legenda = document.createElement('div');
+            legenda.innerHTML = `
+            <span class="d-flex flex-row">
+            <span style="background-color: ${["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"][i]}; width: 15px; height: 15px;margin-right: 3px; margin-top:3px; border-radius: 2px"></span>
+            <span style="font-size: 13px; margin-right: 8px">${labels[i]}: ${porcentagens[i]}%</span>
+            </span>
+        `;
+            legendaDiv.appendChild(legenda);
+        } 
+
+        function CalendarApp(date) {
+  
+            if (!(date instanceof Date)) {
+              date = new Date();
+            }
+            
+            this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            this.months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            this.apts = [
+              {
+                name: 'Finish this web app',
+                endTime: new Date(2016, 4, 30, 23),
+                startTime: new Date(2016, 4, 30, 21),
+                day: new Date(2016, 4, 30).toString()
+              }
+              
+            ];
+            
+            this.aptDates = [new Date(2016, 4, 30).toString(),new Date(2016, 4, 1).toString()];
+            this.eles = {
+            };
+            this.calDaySelected = null;
+            
+            this.calendar = document.getElementById("calendar-app");
+            
+            this.calendarView = document.getElementById("dates");
+            
+            this.calendarMonthDiv = document.getElementById("calendar-month");
+            this.calendarMonthLastDiv = document.getElementById("calendar-month-last");
+            this.calendarMonthNextDiv = document.getElementById("calendar-month-next");
+            
+            this.dayInspirationalQuote = document.getElementById("inspirational-quote");
+             
+            this.todayIsSpan = document.getElementById("footer-date");
+                   
+            /* Start the app */
+            this.showView(date);
+            this.addEventListeners();
+            this.todayIsSpan.textContent = "Hoje é " + this.months[date.getMonth()] + " " + date.getDate();  
+          }
+          
+          CalendarApp.prototype.addEventListeners = function(){
+            
+            this.calendar.addEventListener("click", this.mainCalendarClickClose.bind(this));
+            this.todayIsSpan.addEventListener("click", this.showView.bind(this));
+            this.calendarMonthLastDiv.addEventListener("click", this.showNewMonth.bind(this));
+            this.calendarMonthNextDiv.addEventListener("click", this.showNewMonth.bind(this));
+          
+          };
+
+          CalendarApp.prototype.showView = function(date){
+            if ( !date || (!(date instanceof Date)) ) date = new Date();
+            var now = new Date(date),
+                y = now.getFullYear(),
+                m = now.getMonth();
+            var today = new Date();
+            
+            var lastDayOfM = new Date(y, m + 1, 0).getDate();
+            var startingD = new Date(y, m, 1).getDay();
+            var lastM = new Date(y, now.getMonth()-1, 1);
+            var nextM = new Date(y, now.getMonth()+1, 1);
+           
+            this.calendarMonthDiv.classList.remove("cview__month-activate");
+            this.calendarMonthDiv.classList.add("cview__month-reset");
+            
+            while(this.calendarView.firstChild) {
+              this.calendarView.removeChild(this.calendarView.firstChild);
+            }
+            
+            // build up spacers
+            for ( var x = 0; x < startingD; x++ ) {
+              var spacer = document.createElement("div");
+              spacer.className = "cview--spacer";
+              this.calendarView.appendChild(spacer);
+            }
+            
+            for ( var z = 1; z <= lastDayOfM; z++ ) {
+             
+              var _date = new Date(y, m ,z);
+              var day = document.createElement("div");
+              day.className = "cview--date";
+              day.textContent = z;
+              day.setAttribute("data-date", _date);
+              day.onclick = this.showDay.bind(this);
+              
+              // check if todays date
+              if ( z == today.getDate() && y == today.getFullYear() && m == today.getMonth() ) {
+                day.classList.add("today");
+              }
+              
+               // check if has events to show
+              if ( this.aptDates.indexOf(_date.toString()) !== -1 ) {
+                day.classList.add("has-events");
+              }
+              
+              this.calendarView.appendChild(day);
+            }
+            
+            var _that = this;
+            setTimeout(function(){
+              _that.calendarMonthDiv.classList.add("cview__month-activate");
+            }, 50);
+            
+            this.calendarMonthDiv.textContent = this.months[now.getMonth()] + " " + now.getFullYear();
+            this.calendarMonthDiv.setAttribute("data-date", now);
+          
+            
+            this.calendarMonthLastDiv.textContent = "← " + this.months[lastM.getMonth()];
+            this.calendarMonthLastDiv.setAttribute("data-date", lastM);
+            
+            this.calendarMonthNextDiv.textContent = this.months[nextM.getMonth()] + " →";
+            this.calendarMonthNextDiv.setAttribute("data-date", nextM);
+            
+          }
+          CalendarApp.prototype.showDay = function(e, dayEle) {
+            e.stopPropagation();
+            if ( !dayEle ) {
+              dayEle = e.currentTarget;
+            }
+            var dayDate = new Date(dayEle.getAttribute('data-date'));
+            
+            this.calDaySelected = dayEle;
+            
+            this.openDayWindow(dayDate);
+            
+          
+            
+          };
+          CalendarApp.prototype.openDayWindow = function(date){
+            
+            var now = new Date();
+            var day = new Date(date);
+            this.dayViewDateEle.textContent = this.days[day.getDay()] + ", " + this.months[day.getMonth()] + " " + day.getDate() + ", " + day.getFullYear();
+            this.dayViewDateEle.setAttribute('data-date', day);
+            this.dayViewEle.classList.add("calendar--day-view-active");
+            
+            /* Contextual lang changes based on tense. Also show btn for scheduling future events */
+            var _dayTopbarText = '';
+            if ( day < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+              _dayTopbarText = "had ";
+              this.addDayEventEle.style.display = "none";
+            } else {
+               _dayTopbarText = "have ";
+               this.addDayEventEle.style.display = "inline";
+            }
+            this.addDayEventEle.setAttribute("data-date", day);
+            
+            var eventsToday = this.showEventsByDay(day);
+            if ( !eventsToday ) {
+              _dayTopbarText += "no ";
+              var _rand = Math.round(Math.random() * ((this.quotes.length - 1 ) - 0) + 0);
+              this.dayInspirationalQuote.textContent = this.quotes[_rand];
+            } else {
+              _dayTopbarText += eventsToday.length + " ";
+              this.dayInspirationalQuote.textContent = null;
+            }
+            //this.dayEventsList.innerHTML = this.showEventsCreateHTMLView(eventsToday);
+            while(this.dayEventsList.firstChild) {
+              this.dayEventsList.removeChild(this.dayEventsList.firstChild);
+            }
+            
+            this.dayEventsList.appendChild(this.showEventsCreateElesView(eventsToday));
+            
+            
+            this.dayEventsEle.textContent = _dayTopbarText + "events on " + this.months[day.getMonth()] + " " + day.getDate() + ", " + day.getFullYear();
+            
+            
+          };
+          
+
+          CalendarApp.prototype.deleteEvent = function(e) {
+            var deleted = this.apts.splice(e.currentTarget.getAttribute("data-idx"),1);
+            var deletedDate = new Date(deleted[0].day);
+            var anyDatesLeft = this.showEventsByDay(deletedDate);
+            if ( anyDatesLeft === false ) {
+              // safe to remove from array
+              var idx = this.aptDates.indexOf(deletedDate.toString());
+              if (idx >= 0) {
+                 this.aptDates.splice(idx,1);
+                // remove dot from calendar view
+                var ele = document.querySelector('.cview--date[data-date="'+ deletedDate.toString() +'"]');
+                if ( ele ) {
+                  ele.classList.remove("has-events");
+                }
+              }
+            }
+            this.openDayWindow(deletedDate);;
+          };
+          CalendarApp.prototype.sortEventsByTime = function(events) {
+            if (!events) return [];
+            return events.sort(function compare(a, b) {
+              if (new Date(a.startTime) < new Date(b.startTime)) {
+                return -1;
+              }
+              if (new Date(a.startTime) > new Date(b.startTime)) {
+                return 1;
+              }
+              // a must be equal to b
+              return 0;
+            });
+          };
+          CalendarApp.prototype.showEventsByDay = function(day) {
+            var _events = [];
+            this.apts.forEach(function(apt, idx){
+              if ( day.toString() == apt.day.toString() ) {
+                apt.index = idx;
+                _events.push(apt);
+              }
+            });
+            return (_events.length) ? _events : false;
+          };
+          CalendarApp.prototype.closeDayWindow = function(){
+            this.dayViewEle.classList.remove("calendar--day-view-active");
+            this.closeNewEventBox();
+          };
+          CalendarApp.prototype.mainCalendarClickClose = function(e){
+            if ( e.currentTarget != e.target ) {
+              return;
+            }
+            
+            this.dayViewEle.classList.remove("calendar--day-view-active");
+            this.closeNewEventBox();
+          };
+          CalendarApp.prototype.addNewEventBox = function(e){
+            var target = e.currentTarget;
+            this.dayEventBoxEle.setAttribute("data-active", "true"); 
+            this.dayEventBoxEle.setAttribute("data-date", target.getAttribute("data-date"));
+            
+          };
+          CalendarApp.prototype.closeNewEventBox = function(e){
+            
+            if (e && e.keyCode && e.keyCode != 13) return false;
+            
+            this.dayEventBoxEle.setAttribute("data-active", "false");
+            // reset values
+            this.resetAddEventBox();
+            
+          };
+          CalendarApp.prototype.saveAddNewEvent = function() {
+            var saveErrors = this.validateAddEventInput();
+            if ( !saveErrors ) {
+              this.addEvent();
+            }
+          };
+          
+          CalendarApp.prototype.addEvent = function() {
+            
+            var name = this.dayEventAddForm.nameEvent.value.trim();
+            var dayOfDate = this.dayEventBoxEle.getAttribute("data-date");
+            var dateObjectDay =  new Date(dayOfDate);
+            var cleanDates = this.cleanEventTimeStampDates();
+            
+            this.apts.push({
+              name: name,
+              day: dateObjectDay,
+              startTime: cleanDates[0],
+              endTime: cleanDates[1]
+            });
+            this.closeNewEventBox();
+            this.openDayWindow(dayOfDate);
+            this.calDaySelected.classList.add("has-events");
+            // add to dates
+            if ( this.aptDates.indexOf(dateObjectDay.toString()) === -1 ) {
+              this.aptDates.push(dateObjectDay.toString());
+            }
+            
+          };
+          CalendarApp.prototype.convertTo23HourTime = function(stringOfTime, AMPM) {
+            // convert to 0 - 23 hour time
+            var mins = stringOfTime.split(":");
+            var hours = stringOfTime.trim();
+            if ( mins[1] && mins[1].trim() ) {
+              hours = parseInt(mins[0].trim());
+              mins = parseInt(mins[1].trim());
+            } else {
+              hours = parseInt(hours);
+              mins = 0;
+            }
+            hours = ( AMPM == 'am' ) ? ( (hours == 12) ? 0 : hours ) : (hours <= 11) ? parseInt(hours) + 12 : hours;
+            return [hours, mins];
+          };
+          CalendarApp.prototype.cleanEventTimeStampDates = function() {
+            
+            var startTime = this.dayEventAddForm.startTime.value.trim() || this.dayEventAddForm.startTime.getAttribute("placeholder") || '8';
+            var startAMPM = this.dayEventAddForm.startAMPM.value.trim() || this.dayEventAddForm.startAMPM.getAttribute("placeholder") || 'am';
+            startAMPM = (startAMPM == 'a') ? startAMPM + 'm' : startAMPM;
+            var endTime = this.dayEventAddForm.endTime.value.trim() || this.dayEventAddForm.endTime.getAttribute("placeholder") || '9';
+            var endAMPM = this.dayEventAddForm.endAMPM.value.trim() || this.dayEventAddForm.endAMPM.getAttribute("placeholder") || 'pm';
+            endAMPM = (endAMPM == 'p') ? endAMPM + 'm' : endAMPM;
+            var date = this.dayEventBoxEle.getAttribute("data-date");
+            
+            var startingTimeStamps = this.convertTo23HourTime(startTime, startAMPM);
+            var endingTimeStamps = this.convertTo23HourTime(endTime, endAMPM);
+            
+            var dateOfEvent = new Date(date);
+            var startDate = new Date(dateOfEvent.getFullYear(), dateOfEvent.getMonth(), dateOfEvent.getDate(), startingTimeStamps[0], startingTimeStamps[1]);
+            var endDate = new Date(dateOfEvent.getFullYear(), dateOfEvent.getMonth(), dateOfEvent.getDate(), endingTimeStamps[0], endingTimeStamps[1]);
+            
+            // if end date is less than start date - set end date back another day
+            if ( startDate > endDate ) endDate.setDate(endDate.getDate() + 1);
+            
+            return [startDate, endDate];
+            
+          };
+          CalendarApp.prototype.validateAddEventInput = function() {
+          
+            var _errors = false;
+            var name = this.dayEventAddForm.nameEvent.value.trim();
+            var startTime = this.dayEventAddForm.startTime.value.trim();
+            var startAMPM = this.dayEventAddForm.startAMPM.value.trim();
+            var endTime = this.dayEventAddForm.endTime.value.trim();
+            var endAMPM = this.dayEventAddForm.endAMPM.value.trim();
+            
+            if (!name || name == null) {
+              _errors = true;
+              this.dayEventAddForm.nameEvent.classList.add("add-event-edit--error");
+              this.dayEventAddForm.nameEvent.focus();
+            } else {
+               this.dayEventAddForm.nameEvent.classList.remove("add-event-edit--error");
+            }
+            
+          //   if (!startTime || startTime == null) {
+          //     _errors = true;
+          //     this.dayEventAddForm.startTime.classList.add("add-event-edit--error");
+          //   } else {
+          //      this.dayEventAddForm.startTime.classList.remove("add-event-edit--error");
+          //   }
+            
+            return _errors;
+            
+            
+          };
+          var timeOut = null;
+          var activeEle = null;
+          CalendarApp.prototype.inputChangeLimiter = function(ele) {
+            
+            if ( ele.currentTarget ) {
+              ele = ele.currentTarget;
+            }
+            if (timeOut && ele == activeEle){
+              clearTimeout(timeOut);
+            }
+            
+            var limiter = CalendarApp.prototype.textOptionLimiter;
+          
+            var _options = ele.getAttribute("data-options").split(",");
+            var _format = ele.getAttribute("data-format") || 'text';
+            timeOut = setTimeout(function(){
+              ele.value = limiter(_options, ele.value, _format);
+            }, 600);
+            activeEle = ele;
+            
+          };
+          CalendarApp.prototype.textOptionLimiter = function(options, input, format){
+            if ( !input ) return '';
+            
+            if ( input.indexOf(":") !== -1 && format == 'datetime' ) {
+           
+              var _splitTime = input.split(':', 2);
+              if (_splitTime.length == 2 && !_splitTime[1].trim()) return input;
+              var _trailingTime = parseInt(_splitTime[1]);
+              /* Probably could be coded better -- a block to clean up trailing data */
+              if (options.indexOf(_splitTime[0]) === -1) {
+                return options[0];
+              }
+              else if (_splitTime[1] == "0" ) {
+                return input;
+              }
+              else if (_splitTime[1] == "00" ) {
+                return _splitTime[0] +  ":00";
+              }
+              else if (_trailingTime < 10 ) {
+                return _splitTime[0] + ":" + "0" + _trailingTime;
+              }
+              else if ( !Number.isInteger(_trailingTime) || _trailingTime < 0 || _trailingTime > 59 )  {
+                return _splitTime[0];
+              } 
+              return _splitTime[0] + ":" + _trailingTime;
+            }
+            if ((input.toString().length >= 3) ) {
+              var pad = (input.toString().length - 4) * -1;
+              var _hour, _min;
+              if (pad == 1) {
+                _hour = input[0];
+                _min = input[1] + input[2];
+              } else {
+                _hour = input[0] + input[1];
+                _min = input[2] + input[3];
+              }
+              
+              _hour = Math.max(1,Math.min(12,(_hour)));
+              _min = Math.min(59,(_min));
+              if ( _min < 10 ) { 
+                _min = "0" + _min;
+              }
+              _min = (isNaN(_min)) ? '00' : _min;
+              _hour = (isNaN(_hour)) ? '9' : _hour ;
+          
+              return _hour + ":" + _min;
+              
+            }
+          
+            if (options.indexOf(input) === -1) {
+              return options[0];
+            }
+            
+            return input;
+          };
+          CalendarApp.prototype.resetAddEventBox = function(){
+            this.dayEventAddForm.nameEvent.value = '';
+            this.dayEventAddForm.nameEvent.classList.remove("add-event-edit--error");
+            this.dayEventAddForm.endTime.value = '';
+            this.dayEventAddForm.startTime.value = '';
+            this.dayEventAddForm.endAMPM.value = '';
+            this.dayEventAddForm.startAMPM.value = '';
+          };
+          CalendarApp.prototype.showNewMonth = function(e){
+            var date = e.currentTarget.dataset.date;
+            var newMonthDate = new Date(date);
+            this.showView(newMonthDate);
+            this.closeDayWindow();
+            return true;
+          };
+          
+          var calendar = new CalendarApp();
+          console.log(calendar);
+          
+          
+        
+        
+        
+        
+        
+    </script>
 {% endblock %}

@@ -1,14 +1,24 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from datetime import date
-from .models import Indicador, GRI, ProtocoloGRI, DadosConteudoIndicador
+import calendar
+from datetime import date, datetime, timedelta
+from django.db.models import Count
+from .models import Indicador, GRI, ProtocoloGRI, DadosConteudoIndicador, Status, Tarefa
 
 def index(request):
+    ano_atual = datetime.now().year
+    total_indicadores = Indicador.objects.count()
     
-    gris = GRI.objects.all()
+    status_counts = Status.objects.annotate(indicador_count=Count('indicador'))
+    status_counts_dict = {status.get_valor_display(): status.indicador_count for status in status_counts}
     
+    labels = [status[1] for status in Status.STATUS_CHOICES]
+    data = [status_counts_dict.get(status[1], 0) for status in Status.STATUS_CHOICES]
+        
     context = {
-        'gris': gris,
+        'total_indicadores': total_indicadores,
+        'ano_atual': ano_atual,
+        'labels': labels,
+        'data': data, 
     }
    
     
@@ -25,6 +35,7 @@ def indicadores(request):
     }
     
     return render(request, 'indicadores.html', context=context)
+
 
 def indicador(request, gri_numero, indicador_id):
     gri = get_object_or_404(GRI, numero=gri_numero)

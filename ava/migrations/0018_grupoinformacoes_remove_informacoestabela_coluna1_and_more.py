@@ -38,11 +38,6 @@ class Migration(migrations.Migration):
             model_name='dadosconteudoindicador',
             name='quantidade_colunas',
         ),
-        migrations.AddField(
-            model_name='indicador',
-            name='pergunta',
-            field=models.TextField(default=''),
-        ),
         migrations.DeleteModel(
             name='InformacoesTabela',
         ),

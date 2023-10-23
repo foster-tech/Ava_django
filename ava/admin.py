@@ -1,16 +1,21 @@
 from django.contrib import admin
 from .forms import IndicadorAdminForm, GrupoInformacoesForm
-from .models import Indicador,HistoricoIndicador, GRI, Status, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes, Fabrica, Fabricante
+from .models import Indicador,HistoricoIndicador, GRI, Status, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes, Fabrica, Perguntas
 import django.apps
 
 @admin.register(Fabrica)
 class FabricaAdmin(admin.ModelAdmin):
     ordering = ['nome']
 
+
+class PerguntasInline(admin.TabularInline):
+    model = Perguntas
+    
 @admin.register(Indicador)
 class IndicadorAdmin(admin.ModelAdmin):
+    inlines = [PerguntasInline]
     form = IndicadorAdminForm
-    list_display = ('tema', 'gri', 'comentario', 'categoria', 'ano_criacao', 'resposta', 'pergunta')
+    list_display = ('tema', 'gri', 'comentario', 'categoria', 'ano_criacao', 'resposta')
     list_filter = ('tema', 'categoria')
     list_editable = ('resposta',)
     search_fields = ('tema', 'categoria')
@@ -52,10 +57,6 @@ class GrupoInformacoesInline(admin.TabularInline):
 class DadosConteudoIndicadorAdmin(admin.ModelAdmin):
     inlines = [GrupoInformacoesInline]
     list_display=('indicador', 'ano')
-    
-
-
-        
 
 
 models = django.apps.apps.get_models()
