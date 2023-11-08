@@ -5,7 +5,7 @@ from .models import Indicador, GrupoInformacoes
 class IndicadorAdminForm(forms.ModelForm):
     class Meta:
         model = Indicador
-        fields = ['tema', 'gri', 'comentario', 'status', 'categoria','info','colunas','dados','responsaveis', 'validadores', 'slug',]
+        fields = ['tema', 'gri', 'comentario', 'status', 'categoria','colunas','dados','responsaveis', 'validadores', 'slug',]
 
 class GrupoInformacoesForm(forms.ModelForm):
     class Meta:

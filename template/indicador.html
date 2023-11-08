@@ -49,10 +49,12 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Indicador {{ indicador.tema }} GRI-{{indicador.gri.numero }}</h5>
                                     <br />
-                                    <p>2.1 Identifique todas as fábricas operadas pela organização onde os produtos são fabricados.<p>
-                                    {% if indicador.info %}
-                                        <p>{{indicador.info}}<p>
-                                    {% endif %}
+                                    {% with infos=indicador.infohead_set.all %}
+                                        {% for i in infos %}
+                                            <p style="color: black">{{ i.info }}</p>
+                                        {% endfor %}
+                                    {% endwith %}
+                                
                                         {% if conteudo_atual %}
                                             <div class="card mb-3">
                                                 <div class="card-header" style="background-color: #6ba39c; color: #fff">{{ conteudo_atual.ano }}</div>

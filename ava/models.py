@@ -9,8 +9,11 @@ from django.db import models
 
 class Tarefa(models.Model):
     nome = models.CharField(max_length=100)
-    data_inicio = models.DateField(default='1999-01-01')
-    duracao_semanas = models.PositiveIntegerField(default=0)
+    data_inicio = models.DateField(default='2023-01-01')
+    data_fim = models.DateField(default='2023-01-01')
+    
+    def __str__(self):
+        return self.nome
     
 class Empresa(models.Model):
     nome = models.CharField(max_length = 140)
@@ -86,7 +89,6 @@ class Indicador(models.Model):
     comentario = models.CharField(max_length = 500)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     categoria = models.CharField(choices=CATEGORIA_CHOICES, max_length=140)
-    info = models.TextField(blank=True, null=True)
     resposta = models.TextField(blank=True, null=True)
     ano_criacao  = models.IntegerField(default=datetime.now().year)
     colunas = models.JSONField(blank=True, null=True)
@@ -129,6 +131,10 @@ class DadosConteudoIndicador(models.Model):
 class Perguntas(models.Model):
     indicador = models.ForeignKey(Indicador, on_delete=models.CASCADE)
     pergunta = models.TextField(default="") 
+    
+class InfoHead(models.Model):
+    indicador = models.ForeignKey(Indicador, on_delete=models.CASCADE)
+    info = models.TextField(default="") 
        
 
 class GrupoInformacoes(models.Model):

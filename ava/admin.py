@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .forms import IndicadorAdminForm, GrupoInformacoesForm
-from .models import Indicador,HistoricoIndicador, GRI, Status, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes, Fabrica, Perguntas
+from .models import Indicador,HistoricoIndicador, GRI, Status, ProtocoloGRI, DadosConteudoIndicador, GrupoInformacoes, Fabrica, Perguntas, InfoHead
 import django.apps
 
 @admin.register(Fabrica)
@@ -11,9 +11,12 @@ class FabricaAdmin(admin.ModelAdmin):
 class PerguntasInline(admin.TabularInline):
     model = Perguntas
     
+class InfoHeadInline(admin.TabularInline):
+    model = InfoHead
+    
 @admin.register(Indicador)
 class IndicadorAdmin(admin.ModelAdmin):
-    inlines = [PerguntasInline]
+    inlines = [PerguntasInline, InfoHeadInline]
     form = IndicadorAdminForm
     list_display = ('tema', 'gri', 'comentario', 'categoria', 'ano_criacao', 'resposta')
     list_filter = ('tema', 'categoria')

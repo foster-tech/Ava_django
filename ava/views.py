@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-import calendar
-from datetime import date, datetime, timedelta
+from django.core import serializers
+from datetime import date, datetime
 from django.db.models import Count
 from .models import Indicador, GRI, ProtocoloGRI, DadosConteudoIndicador, Status, Tarefa
+import plotly.figure_factory as ff
+
 
 def index(request):
     ano_atual = datetime.now().year
@@ -13,12 +15,38 @@ def index(request):
     
     labels = [status[1] for status in Status.STATUS_CHOICES]
     data = [status_counts_dict.get(status[1], 0) for status in Status.STATUS_CHOICES]
+    
+    tarefas = Tarefa.objects.all()
+    df = []
+    
+    for tarefa in tarefas:
+        data_i = tarefa.data_inicio.strftime('%Y-%m-%d')
+        data_f = tarefa.data_fim.strftime('%Y-%m-%d')
+        df.append(dict(Task=tarefa.nome, Start=data_i, Finish=data_f)) 
+    
+    
+    
+    
+    fig = ff.create_gantt(df, index_col=None)
+    
+    fig.update_layout(
+    xaxis_title='Datas',
+    yaxis_title='Tarefas',
+    margin=dict(l=20, r=20, t=20, b=20),
+    )
+    
+    graph_html = fig.to_html(full_html=False, default_height=500, default_width='100%')
+    
+    
+    
+    
         
     context = {
         'total_indicadores': total_indicadores,
         'ano_atual': ano_atual,
         'labels': labels,
         'data': data, 
+        'graph_html': graph_html
     }
    
     
