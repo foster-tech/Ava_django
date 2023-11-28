@@ -28,31 +28,46 @@
                                             <thead>
                                                 <tr>
                                                     <th>Tema Material</th>
-                                                    <th>Indicador</th>
-                                                    <th>Responsaveis</th>
+                                                    <th>Indicadores</th>
+                                                    <th>Responsáveis</th>
                                                     <th>Validadores</th>
-                                                    <th>Estado</th>
+                                                    <th>Status</th>
+                                                    <th>Ações</th>
                                                 </tr>
                                             </thead>
-                                            {% for indicador in indicadores %}                           
+                                            {% for dado_formulario in dados_formularios %}
+                                            {% if dado_formulario.formulario.ano == ano_atual%}
                                                 <tr>
-                                                    <td scope="col">{{ indicador.tema }}</td>
-                                                    <td scope="col">{{ indicador.gri }}</td>
-                                                    <td scope="col">
-                                                        {% for responsavel in indicador.responsaveis.all %}
+                                                    <td>
+                                                        {% for indicador in dado_formulario.indicadores %}
+                                                                {{ indicador.tema }}<br>
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td>
+                                                        {% for indicador in dado_formulario.indicadores %}
+                                                            ({{ indicador.gri }})<br>
+                                                        {% endfor %}
+                                                    </td>
+                                                    <td>
+                                                        {% for responsavel in dado_formulario.formulario.responsaveis.all %}
                                                             {{ responsavel.nome }}<br>
                                                         {% endfor %}
                                                     </td>
-                                                    <td scope="col">
-                                                        {% for validador in indicador.validadores.all %}
+                                                    <td>
+                                                        {% for validador in dado_formulario.formulario.validadores.all %}
                                                             {{ validador.nome }}<br>
                                                         {% endfor %}
                                                     </td>
-                                                    <td scope="col">{{ indicador.status.get_valor_display}}</td>
-                                                    <td scope="col"><a href="{% url "indicador" gri_numero=indicador.gri.numero indicador_id=indicador.id %}">Abrir</a></td>
+                                                    <td>{{ dado_formulario.formulario.status.get_valor_display }}</td>
+                                                    <td>
+                                                        <a href="{% url 'indicador' formulario_id=dado_formulario.formulario.id %}">Abrir</a>
+                                                    </td>
                                                 </tr>
+                                            {% endif  %}
                                             {% endfor %}
                                         </table>
+                                        
+                                        
                                     </div>
                                 </div>
                             </div>

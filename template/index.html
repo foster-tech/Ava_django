@@ -14,7 +14,7 @@
         {% include "partials/nav_side_bar.html" %}
         
         <!-- El contenido de la derecha -->
-        <div class="col mt-4" style="margin-left: 100px">
+        <div class="col mt-4" >
             <div class="row">
                 <div class="tab" id="">
                     <main class="container">
@@ -32,30 +32,36 @@
 
                               </div>
                               <br/>
-                                <div class="d-flex flex-row mt-2 justify-content-center">
-                                    <div class="card" style="margin-right: 20px; width:40%;">
-                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Detalhes</h5>
-                                        <div class="card-body d-flex flex-row justify-content-end" style="font-size: 18px;">
-                                            <div class="d-flex flex-column align-items-end" style="padding-top: 20px; padding-right: 40px">
-                                                <div class="headD">Ano</div>
-                                                <div class="headD">Indicadores</div>
-                                                <div class="headD">Pontos Focais</div>
-                                                <div class="headD">Aprovadores</div>
-                                            </div>
-                                            <div class="d-flex flex-column align-items-start" style="padding: 20px">
-                                                <div class="b-resutl">{{ano_atual}}</div>
-                                                <div class="b-resutl">{{total_indicadores}}</div>
-                                                <div class="b-resutl">33</div>
-                                                <div class="b-resutl">22</div>
-                                            </div>
-                                                
+                              <div class="d-flex flex-row mt-2 justify-content-center">
+                              <div class="card" style="margin-right: 20px; width:40%;">
+                                  <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Detalhes</h5>
+                                  <div class="card-body d-flex flex-row justify-content-end" style="font-size: 18px;">
+                                      <div class="d-flex flex-column align-items-end" style="padding-top: 20px; padding-right: 40px">
+                                          <div class="headD">Ano</div>
+                                          <div class="headD">Indicadores</div>
+                                          <div class="headD">Formulários</div>
+                                          <div class="headD">Formularios Pendentes</div>
+                                      </div>
+                                      <div class="d-flex flex-column align-items-start" style="padding: 20px">
+                                        <div class="b-resutl">
+                                            <select id="anoDropdown" style="border: none;" onchange="atualizarTotais(this.value)">
+                                                {% for ano in anos %}
+                                                    <option value="{{ ano }}" {% if ano == selected_ano %}selected{% endif %}>{{ ano }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
-                                    </div>
+                                        <div class="b-resutl" id="totalIndicadores">{{ total_indicadores }}</div>
+                                        <div class="b-resutl" id="totalFormularios">{{ total_formularios }}</div>                                        
+                                        <div class="b-resutl">22</div>
+                                      </div>
+                                  </div>
+                              </div>
                                     <div class="card" style="width:60%;">
                                         <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Status Indicadores</h5>
                                         <div class="card-body d-flex flex-column mt-2 align-items-center">
-                                            <canvas id="meuGrafico" width="700" height="180"></canvas>
-                                            <div id="legendaGrafico" class="d-flex flex-row"></div>
+                                                <canvas id="statusChart" style="width:40%; height: 80px;"></canvas>
+                                                <div id="statusLegend" class="legend-container"></div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -95,76 +101,172 @@
             margin-bottom: 7px
         }
           
-        #legendaGrafico{
-            margin-top: 16px;
-            
+        .legend-container {
+            display: flex;
+            margin-top: 10px;
         }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        
+        .legend-color-box {
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+        }
+        
+        .legend-text {
+            font-size: 14px;
+        }
+        
+        .legend-percent {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+        
     </style>
 
     
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <script>
-        var data = {{data|safe}}
-        var labels = {{labels|safe}}
-
-        var totalIndicadores = data.reduce((a, b) => a + b, 0);
-
-        var porcentagens = data.map(function(valor) {
-            return ((valor / totalIndicadores) * 100).toFixed(0);});
-
-        new Chart(document.getElementById("meuGrafico"), {
-            type: 'horizontalBar',
-            data: {
-              labels: labels,
-              datasets: [
-                {
-                  label: false,
-                  backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
-                  data: data
-                }
-              ]
-            },
-            options: {
-              legend: { display: false },
-              title: {
-                display: false,
-              },  scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        precision: 0,
-                        callback: function(value, index, values) {
-                            return Math.round(value);
-                        }
-                    }
-                },
-                x: { // Adicionado para configurar os ticks no eixo x
-                    ticks: {
-                        beginAtZero: true,
-                        stepSize: 1, // Define a unidade de passo (1 para números inteiros)
-                        callback: function(value, index, values) {
-                            return Math.round(value);
-                        }
-                    }
-                }
-              }
-            }
-        });
-
-        var legendas = labels.map(function(label, index) {
-            return label + ": " + porcentagens[index] + "%";
-        });
+        var myChart;  // Declare myChart no escopo global
+    
+        function atualizarTotaisEAtualizarGrafico(anoSelecionado) {
+            $.ajax({
+                type: 'GET',
+                url: '/atualizar_totais/',  // Substitua pelo URL correto do seu backend
+                data: {'ano': anoSelecionado},
+                success: function(response) {
+                    // Atualiza os valores no DOM
+                    $('#totalIndicadores').text(response.total_indicadores);
+                    $('#totalFormularios').text(response.total_formularios);
         
-        var legendaDiv = document.getElementById('legendaGrafico');
-        for (var i = 0; i < labels.length; i++) {
-         var legenda = document.createElement('div');
-            legenda.innerHTML = `
-            <span class="d-flex flex-row">
-            <span style="background-color: ${["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"][i]}; width: 15px; height: 15px;margin-right: 3px; margin-top:3px; border-radius: 2px"></span>
-            <span style="font-size: 13px; margin-right: 8px">${labels[i]}: ${porcentagens[i]}%</span>
-            </span>
-        `;
-            legendaDiv.appendChild(legenda);
-        } 
+                    // Garante que myChart seja definido antes de chamar a função
+                    if (myChart && myChart.data) {
+                        atualizarGrafico(response.status_data);
+                        atualizarLegenda(response.status_data, response.total_formularios);
+                    } else {
+                        console.log('myChart não está definido ou não possui dados.');
+                    }
+                    
+                },
+                error: function(error) {
+                    console.log('Erro na requisição AJAX:', error);
+                }
+            });
+        }
+        
+        // Função para atualizar a legenda
+        // Função para atualizar a legenda
+        function atualizarLegenda(statusData, totalFormularios) {
+            var legendContainer = $('#statusLegend');
+            legendContainer.empty(); // Limpa a legenda existente
+
+            var labels = Object.keys(statusData);
+            var cores = ['#FFFF33','#FF5733', '#5733FF', '#229A00'];
+
+            for (var i = 0; i < labels.length; i++) {
+                var label = labels[i];
+                var cor = cores[i];
+                var count = statusData[label];
+                var percentual = ((count / totalFormularios) * 100);
+
+                // Cria um elemento de legenda
+                var legendItem = $('<div class="legend-item"></div>');
+                var colorBox = $('<div class="legend-color-box"></div>').css('background-color', cor);
+                var legendText = $('<span class="legend-text"></span>').text(label + ' (' + percentual + '%)');
+
+                // Adiciona o elemento de legenda ao contêiner
+                legendItem.append(colorBox).append(legendText);
+                legendContainer.append(legendItem);
+            }
+        }
+
+      
+        // Função para atualizar o gráfico
+        function atualizarGrafico(statusData) {
+            var labels = Object.keys(statusData);
+            var data = Object.values(statusData);
+            
+            // Atualiza o gráfico com os novos dados
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = data;
+            myChart.update();
+        }
+    
+        // Chama a função ao carregar a página para configurar os valores padrão
+        $(document).ready(function () {
+            configurarValoresPadrao();
+        });
+    
+        // Função para configurar os valores padrão
+        function configurarValoresPadrao() {
+            var anoSelecionado = $('#anoDropdown').val();
+            var ctx = document.getElementById('statusChart').getContext('2d');
+
+            // Obtenha a quantidade total de formulários
+            var totalFormularios = parseInt($('#totalFormularios').text());
+
+            // Cores diferentes para cada barra
+            var cores = ['#FFFF33','#FF5733', '#5733FF', '#229A00'];
+
+            // Inicializa o gráfico
+            myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: false,
+                        data: [],
+                        backgroundColor: cores,
+                        borderColor: cores,
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    legend: {
+                            display: false
+                    },
+                    title: {
+                        display: false
+                    },
+                    maintainAspectRatio: true,
+                    responsive: true,
+                    tooltips: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                label += ': ' + context.parsed.y + ' (' + ((context.parsed.y / totalFormularios) * 100).toFixed(2) + '%)';
+                                return label;
+                            }
+                        }
+                    }
+
+                }
+            });
+
+            atualizarTotaisEAtualizarGrafico(anoSelecionado);
+        }
+
+    
+        // Adiciona um evento para chamar a função quando o ano é alterado
+        $('#anoDropdown').change(function() {
+            var anoSelecionado = $(this).val();
+            atualizarTotaisEAtualizarGrafico(anoSelecionado);
+        });
     </script>
+    
+        
  
 {% endblock %}

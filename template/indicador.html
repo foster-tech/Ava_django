@@ -16,7 +16,7 @@
 
 
                 <div class="col-9">
-                    <nav style="margin-left: 310px;">             
+                    <nav style="margin-left: 50px">             
                         <div class="nav nav-tabs" id="nav-tab" role="tablist" >
                             <button style="color: black" class="nav-link" id="protocolo-tab" data-bs-toggle="tab" data-bs-target="#protocolo" type="button" role="tab" aria-controls="protocolo" aria-selected="false">Protocolo</button>
                             <button style="color: black" class="nav-link active" id="contenido-tab" data-bs-toggle="tab" data-bs-target="#contenido" type="button" role="tab" aria-controls="contenido" aria-selected="true">Conteudo</button>
@@ -39,48 +39,128 @@
                 </div>
 
 
-                <div class="tab-content"  id="nav-tabContent" style="margin-left: 40px;">
-
-
-                    <div class="tab-pane show active" id="contenido" role="tabpanel" aria-labelledby="contenido-tab" tabindex="0">
-                        <main class="container">
+                <div class="tab-content"  id="nav-tabContent">
+                    <div class="tab-pane show active" id="contenido" role="tabpanel" aria-labelledby="contenido-tab" tabindex="0" >
+                        <main style="width: 80%; margin-left: 70px">
                                 <br  />
                             <div class="card">
                                 <div class="card-body">
-                                    <h5 class="card-title">Indicador {{ indicador.tema }} GRI-{{indicador.gri.numero }}</h5>
-                                    <br />
-                                    {% with infos=indicador.infohead_set.all %}
-                                        {% for i in infos %}
-                                            <p style="color: black">{{ i.info }}</p>
+                                    <h5 class="card-title">
+                                        Indicador 
+                                        {% for indicador in formulario.indicador_set.all %}
+                                            {% if  indicador.ano == ano_atual %}
+                                            {{ indicador.gri }}
+                                            {% endif %}
                                         {% endfor %}
-                                    {% endwith %}
-                                
-                                        {% if conteudo_atual %}
-                                            <div class="card mb-3">
-                                                <div class="card-header" style="background-color: #6ba39c; color: #fff">{{ conteudo_atual.ano }}</div>
-                                                <div class="card-body text-primary">
-                                                    <table id="minhaTabelaDinamica" class="table table-bordered table-hover table-striped">
+                                    </h5>
+                                    <p style="color: black">
+                                        {% for info in info_head %}
+                                            <p>{{ info.info }}</p>
+                                        {% endfor %}
+                                    </p>   
+
+                                    <div class="card mb-3">
+                                        <div class="card-header" style="background-color: #6ba39c; color: #fff">{{conteudo_atual.ano_criacao}}</div>
+                                            <div class="card-body text-primary">
+                                                <table id="minhaTabelaDinamica" class="table table-bordered table-hover table-striped">
+                                                    <thead>
+                                                        <tr> 
+                                                            {% if conteudo_atual.possui_fabricante == '0' %}
+                                                                <th scope="col">Fabrica</th>
+                                                            {% elif conteudo_atual.possui_fabricante == '1' %}
+                                                                <th scope="col">{{conteudo_atual.coluna_fixa}}</th>
+                                                            {% endif %}
+                                                            {% for chave, valor in conteudo_atual.colunas.items %}
+                                                                <th scope="col">{{valor}}</th>
+                                                            {% endfor %}
+                                                            <th>Ações</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% if conteudo_atual.possui_fabricante == '0' %}
+                                                        <tr>
+                                                        <td>Fabrica</td>
+                                                        {% autoescape off %}
+                                                                {% for chave, valor in conteudo_atual.dados.items %}
+                                                                    <td>{{ valor|safe }}</td>
+                                                                {% endfor %}
+                                                        {% endautoescape %}
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                                                                    </svg>
+                                                                </button>
+                                                            </td>
+                                                        {% elif conteudo_atual.possui_fabricante == '1' %} 
+                                                            {% for desc in conteudo_atual.descricaotabela_set.all %}
+                                                                <tr> 
+                                                                    <td> {{ desc.descricao }}</td>
+                                                                {% autoescape off %}
+                                                                    {% for chave, valor in conteudo_atual.dados.items %}
+                                                                        <td>{{ valor|safe }}</td>
+                                                                    {% endfor %}
+                                                                {% endautoescape %}
+                                                                <td>
+                                                                    <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                                                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                                                                        </svg>
+                                                                    </button>
+                                                                </td>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        </tr>
+                                                    </tbody>                      
+                                                </table>
+                                                <button onclick="adicionarLinha()" style="border-radius: 10px; margin-left: 95.5%" class="btn btn-primary">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="25" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                                    </svg>
+                                                </button>
+                                                <br />
+                                                <br />
+                                                {% for p in conteudo_atual.perguntas_set.all %}
+                                                    <p style="color: black">{{p.pergunta}}</p>
+                                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                                    <br/>
+                                                {% endfor %}
+                                            </div> 
+                                        </div>
+                                        <br />
+                                        {% for tb in conteudo_anterior %}
+                                        <div class="card mb-3">
+                                            <button class="card-header d-flex justify-content-between"  id="toggle-content" type="button" data-target="card{{ conteudo_anterior.id }}-body" style="background-color: #6ba39c; color: #fff; border: none">
+                                            <div>
+                                                {{tb.ano_criacao}}
+                                            </div>
+                                        </button>
+                                            <div class="card-body text-primary" id="card{{ conteudo_anterior.id }}-body" style="display:none;">
+                                                    <table class="table table-bordered table-hover table-striped">
                                                         <thead>
                                                             <tr> 
-                                                                <th scope="col">Fabricante</th>
-                                                                <th scope="col">Fabrica</th>
-                                                                {% for chave, valor in indicador.colunas.items %}
-                                                                    <th scope="col">{{ valor }}</th>
+                                                                {% if tb.possui_fabricante == '0' %}
+                                                                    <th scope="col">Fabrica</th>
+                                                                {% elif tb.possui_fabricante == '1' %}
+                                                                        <th scope="col">{{tb.coluna_fixa}}</th>
+                                                                {% endif %}
+                                                                {% for chave, valor in tb.colunas.items %}
+                                                                        <th scope="col">{{valor}}</th>
                                                                 {% endfor %}
                                                                 <th>Ações</th>
-
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                        {% with grupos_informacoes=conteudo_atual.grupoinformacoes_set.all %}
-                                                            {% for grupo in grupos_informacoes %}
-                                                                <tr> 
-                                                                    <td >{{ grupo.fabricante }}</td>
-                                                                    <td>{{ grupo.fabrica }}</td>
+                                                            {% if tb.possui_fabricante == '0' %}
+                                                                <tr>
+                                                                    <td>Fabrica</td>
                                                                     {% autoescape off %}
-                                                                        {% for chave, valor in indicador.dados.items %}
-                                                                        <td>{{valor|safe}}</td>
-                                                                        {% endfor %} 
+                                                                    {% for chave, valor in tb.dados.items %}
+                                                                        <td>{{ valor|safe }}</td>
+                                                                    {% endfor %}
                                                                     {% endautoescape %}
                                                                     <td>
                                                                         <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
@@ -90,78 +170,36 @@
                                                                             </svg>
                                                                         </button>
                                                                     </td>
-                                                                </tr>
-                                                            {% endfor %}
-                                                        {% endwith %}
-                                                        </tbody>                      
-                                                    </table>
-                                                    <button onclick="adicionarLinha()" style="border-radius: 10px; margin-left: 95.5%" class="btn btn-primary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="25" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
-                                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                                                        </svg>
-                                                    </button>
-                                                    <br />
-                                                    <br />
-                                                    {% with perguntas=indicador.perguntas_set.all %}
-                                                        {% for p in perguntas %}
-                                                            <p style="color: black">{{ p.pergunta }}</p>
-                                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                                        {% endfor %}
-                                                    {% endwith %}
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        <br />
-                                        {% if conteudos_anteriores %}
-                                            {% for conteudo_anterior in conteudos_anteriores %}
-                                                <div class="card mb-3">
-                                                    <button class="card-header d-flex justify-content-between"  id="toggle-content" type="button" data-target="card{{ conteudo_anterior.id }}-body" style="background-color: #6ba39c; color: #fff; border: none">
-                                                        <div>
-                                                            {{ conteudo_anterior.ano }}
-                                                        </div>
-                                                    </button>
-                                                    <div class="card-body text-primary" id="card{{ conteudo_anterior.id }}-body" style="display:none;">
-                                                        <table class="table table-bordered table-hover table-striped">
-                                                            <thead>
-                                                                <tr> 
-                                                                    <th scope="col">Fabricante</th>
-                                                                <th scope="col">Fabrica</th>
-                                                                {% for chave, valor in indicador.colunas.items %}
-                                                                    <th scope="col">{{ valor }}</th>
+                                                            {% elif tb.possui_fabricante == '1' %} 
+                                                                {% for desc in tb.descricaotabela_set.all %}
+                                                                    <tr> 
+                                                                        <td> {{ desc.descricao }}</td>
+                                                                        {% autoescape off %}
+                                                                            {% for chave, valor in tb.dados.items %}
+                                                                                <td>{{ valor|safe }}</td>
+                                                                            {% endfor %}
+                                                                        {% endautoescape %}
+                                                                        <td>
+                                                                            <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="excluirLinha(this)">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                                                                                </svg>
+                                                                            </button>
+                                                                        </td>
                                                                 {% endfor %}
-                                                                </tr>
-                                                            </thead>
-                                                            {% with grupos_informacoes=conteudo_anterior.grupoinformacoes_set.all %}
-                                                                {% if grupos_informacoes %}
-                                                                    <tbody>
-                                                                        {% for grupo in grupos_informacoes  %}
-                                                                            <tr> 
-                                                                                <td >{{ grupo.fabricante }}</td>
-                                                                                <td>{{ grupo.fabrica }}</td>
-                                                                                {% for chave, valor in indicador.colunas.items %}
-                                                                                <td></td>
-                                                                                {% endfor %} 
-                                                                            </tr>
-                                                                        {% endfor %}
-                                                                    </tbody>  
-                                                                {% endif %}
-                                                            {% endwith %}                     
-                                                        </table>
-                                                        <br />
-                                                        {% with perguntas=indicador.perguntas_set.all %}
-                                                            {% for p in perguntas %}
-                                                                <p style="color: black">{{ p.pergunta }}</p>
-                                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" style="margin-bottom: 20px" disabled>{{conteudo_anterior.resp_indicador}}</textarea>
-                                                            {% endfor %}
-                                                        {% endwith %}
-                                                    </div>
-                                                    
-                                                </div>
+                                                            {% endif %}
+                                                            </tr>
+                                                        </tbody>                     
+                                                    </table>
                                                 
-                                            {% endfor %}
-                                        {% endif %}                                  
-                                    <br />                     
+                                                <br />
+                                            </div>
+                                        
+                                                    
+                                                </div>                                 
+                                    <br />
+                                    {% endfor %}                 
                                 </div> 
                             </div>
                                 <br  />
@@ -247,32 +285,38 @@
                         </main>
                     </div>
                     
+                     <!-- El tab panel del Protocolo -->
                     <div class="tab-pane" id="protocolo" role="tabpanel" aria-labelledby="protocolo-tab" tabindex="0">
                         <main class="container">
-                                <br  />
                             <div id="parametros">
+                                {% for p in definicoes_protocolo_lista %}
+                                <br  />
                                 <div class="card">
                                     <div class="card-body">
-                                                <h5>Conteudo {{indicador.gri.numero }}</h5>
-                                                <br/>
-                                                <label><b>Descrição</b></label>
-                                                <p>{{protocolo.decricao}}</p>
-                                                <label><b>Tema Material:</b></label>
-                                                <p>{{ indicador.tema }} </p>
-                                                <label><b>Tópico GRI:</b></label>
-                                                <p>{{protocolo.topico_gri}}</p>
-                                                <label><b>Relevância do Conteúdo:</b></label>
-                                                <p>{{protocolo.relevancia}}</p>
-                                                <label><b>Fontes de Documentação:</b></label>
-                                                <p>{{protocolo.fontes}}</p>
-                                                {% if protocolo.references %}
-                                                    <label><b>References:</b></label>
-                                                    <p>{{protocolo.references}}</p>
-                                                {% endif %}
-                                                <label><b>Definições:</b></label>
-                                                <p>{{protocolo.definicoes}}</p>
+                                        <h5>Conteúdo {{ p.protocolo.indicador }}</h5>
+                                        <br/>
+                                        <label><b>Descrição</b></label>
+                                        <p>{{ p.protocolo.descricao }}</p>
+                                        <label><b>Tema Material:</b></label>
+                                        <p>{{ p.protocolo.tema_material }} </p>
+                                        <label><b>Tópico GRI:</b></label>
+                                        <p>{{ p.protocolo.topico_gri }}</p>
+                                        <label><b>Relevância do Conteúdo:</b></label>
+                                        <p>{{ p.protocolo.relevancia }}</p>
+                                        <label><b>Fontes de Documentação:</b></label>
+                                        <p>{{ p.protocolo.fontes }}</p>
+                                        {% if p.protocolo.references %}
+                                            <label><b>References:</b></label>
+                                            <p>{{ p.protocolo.references }}</p>
+                                        {% endif %}
+                                        {% for def in p.definicoes %}
+                                            <p><b>{{ def.titulo }}</b></p>
+                                            <p>{{ def.definicao }}</p>
+                                        {% endfor %}
                                     </div>
                                 </div>
+                            {% endfor %}
+                            
                             </div>
                         </main>
                     </div>
