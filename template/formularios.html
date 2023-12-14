@@ -27,44 +27,46 @@
                                         <table class="table table-borderless table-hover table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th>Tema Material</th>
-                                                    <th>Indicadores</th>
-                                                    <th>Responsáveis</th>
-                                                    <th>Validadores</th>
-                                                    <th>Status</th>
-                                                    <th>Ações</th>
+                                                    <th class="filter-trigger" data-filtro="tema">Tema Material <span class="filter-icon">&#9662;</span></th>
+                                                    <th class="filter-trigger" data-filtro="indicadores">Indicadores <span class="filter-icon">&#9662;</span></th>
+                                                    <th class="filter-trigger" data-filtro="responsaveis">Responsáveis <span class="filter-icon">&#9662;</span></th>
+                                                    <th class="filter-trigger" data-filtro="validadores">Validadores <span class="filter-icon">&#9662;</span></th>
+                                                    <th class="filter-trigger" data-filtro="status">Status <span class="filter-icon">&#9662;</span></th>
                                                 </tr>
                                             </thead>
-                                            {% for dado_formulario in dados_formularios %}
-                                            {% if dado_formulario.formulario.ano == ano_atual%}
-                                                <tr>
-                                                    <td>
-                                                        {% for indicador in dado_formulario.indicadores %}
-                                                                {{ indicador.tema }}<br>
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>
-                                                        {% for indicador in dado_formulario.indicadores %}
-                                                            ({{ indicador.gri }})<br>
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>
-                                                        {% for responsavel in dado_formulario.formulario.responsaveis.all %}
-                                                            {{ responsavel.nome }}<br>
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>
-                                                        {% for validador in dado_formulario.formulario.validadores.all %}
-                                                            {{ validador.nome }}<br>
-                                                        {% endfor %}
-                                                    </td>
-                                                    <td>{{ dado_formulario.formulario.status.get_valor_display }}</td>
-                                                    <td>
-                                                        <a href="{% url 'indicador' formulario_id=dado_formulario.formulario.id %}">Abrir</a>
-                                                    </td>
-                                                </tr>
-                                            {% endif  %}
-                                            {% endfor %}
+                                            <tbody>
+                                                {% for dado_formulario in dados_formularios %}
+                                                    {% if dado_formulario.formulario.ano == ano_atual%}
+                                                        <tr>
+                                                            <td class="tema">
+                                                                {% for indicador in dado_formulario.indicadores %}
+                                                                        {{ indicador.tema }}<br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td class="indicadores">
+                                                                {% for indicador in dado_formulario.indicadores %}
+                                                                    ({{ indicador.gri }})<br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td class="responsaveis">
+                                                                {% for responsavel in dado_formulario.formulario.responsaveis.all %}
+                                                                    {{ responsavel.nome }}<br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td class="validadores">
+                                                                {% for validador in dado_formulario.formulario.validadores.all %}
+                                                                    {{ validador.nome }}<br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td class="status">{{ dado_formulario.formulario.status.get_valor_display }}</td>
+                                                            <td>
+                                                                <a href="{% url 'indicador' formulario_id=dado_formulario.formulario.id %}">Abrir</a>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif  %}
+                                                {% endfor %}
+                                            </tbody>
+
                                         </table>
                                         
                                         
@@ -78,5 +80,50 @@
             </div>
         </div>     
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var filterTriggers = document.querySelectorAll(".filter-trigger");
+    
+            filterTriggers.forEach(function(trigger) {
+                trigger.addEventListener("click", function() {
+                    var filtro = this.dataset.filtro;
+                    var dropdown = document.querySelector("#" + filtro + "-dropdown");
+    
+                    // Posiciona o dropdown abaixo do th
+                    var rect = this.getBoundingClientRect();
+                    dropdown.style.top = rect.bottom + "px";
+                    dropdown.style.left = rect.left + "px";
+    
+                    // Mostra ou esconde o dropdown
+                    dropdown.style.display = (dropdown.style.display === "none") ? "block" : "none";
+                });
+            });
+    
+            var filterDropdownLinks = document.querySelectorAll(".filter-dropdown a");
+    
+            filterDropdownLinks.forEach(function(link) {
+                link.addEventListener("click", function(event) {
+                    event.preventDefault();
+                    var filtro = this.dataset.filtro;
+                    var valorFiltro = this.innerText;
+    
+                    // Aplica o filtro à tabela
+                    var cells = document.querySelectorAll("." + filtro);
+                    cells.forEach(function(cell) {
+                        var row = cell.parentElement;
+                        row.style.display = (cell.innerText.trim() !== valorFiltro) ? "none" : "";
+                    });
+    
+                    // Esconde todos os dropdowns
+                    document.querySelectorAll(".filter-dropdown").forEach(function(dropdown) {
+                        dropdown.style.display = "none";
+                    });
+                });
+            });
+        });
+    </script>
+    
+
 {% endblock %}
     

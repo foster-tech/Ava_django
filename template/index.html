@@ -4,16 +4,12 @@
 
 {% block content %}
 
-<!-- El navbar de arriba y las cosas de boostrap -->
 {% include "partials/header.html" %}
 
-    <!-- El contenido debajo del navbar -->
     <div class="row">
     
-        <!-- La barra lateral de la izquierda -->
         {% include "partials/nav_side_bar.html" %}
         
-        <!-- El contenido de la derecha -->
         <div class="col mt-4" >
             <div class="row">
                 <div class="tab" id="">
@@ -33,8 +29,8 @@
                               </div>
                               <br/>
                               <div class="d-flex flex-row mt-2 justify-content-center">
-                              <div class="card" style="margin-right: 20px; width:40%;">
-                                  <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Detalhes</h5>
+                              <div class="card" style="margin-right: 20px; width:35%;">
+                                  <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Geral</h5>
                                   <div class="card-body d-flex flex-row justify-content-end" style="font-size: 18px;">
                                       <div class="d-flex flex-column align-items-end" style="padding-top: 20px; padding-right: 40px">
                                           <div class="headD">Ano</div>
@@ -44,7 +40,7 @@
                                       </div>
                                       <div class="d-flex flex-column align-items-start" style="padding: 20px">
                                         <div class="b-resutl">
-                                            <select id="anoDropdown" style="border: none;" onchange="atualizarTotais(this.value)">
+                                            <select id="anoDropdown" style="border: none;" onchange="atualizarTotaisEAtualizarGrafico(this.value)">
                                                 {% for ano in anos %}
                                                     <option value="{{ ano }}" {% if ano == selected_ano %}selected{% endif %}>{{ ano }}</option>
                                                 {% endfor %}
@@ -52,12 +48,12 @@
                                         </div>
                                         <div class="b-resutl" id="totalIndicadores">{{ total_indicadores }}</div>
                                         <div class="b-resutl" id="totalFormularios">{{ total_formularios }}</div>                                        
-                                        <div class="b-resutl">22</div>
+                                        <div class="b-resutl" id="formulariosPendentes">{{total_formularios_pendentes}}</div>
                                       </div>
                                   </div>
                               </div>
                                     <div class="card" style="width:60%;">
-                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Status Indicadores</h5>
+                                        <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Avanço da Coleta</h5>
                                         <div class="card-body d-flex flex-column mt-2 align-items-center">
                                                 <canvas id="statusChart" style="width:40%; height: 80px;"></canvas>
                                                 <div id="statusLegend" class="legend-container"></div>
@@ -133,22 +129,25 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        var myChart;  // Declare myChart no escopo global
+        var myChart; 
     
         function atualizarTotaisEAtualizarGrafico(anoSelecionado) {
             $.ajax({
                 type: 'GET',
-                url: '/atualizar_totais/',  // Substitua pelo URL correto do seu backend
+                url: '/atualizar_totais/', 
                 data: {'ano': anoSelecionado},
                 success: function(response) {
-                    // Atualiza os valores no DOM
                     $('#totalIndicadores').text(response.total_indicadores);
                     $('#totalFormularios').text(response.total_formularios);
+                    $('#formulariosPendentes').text(response.total_formularios_pendentes);
+
         
                     // Garante que myChart seja definido antes de chamar a função
                     if (myChart && myChart.data) {
                         atualizarGrafico(response.status_data);
                         atualizarLegenda(response.status_data, response.total_formularios);
+                        console.log('Dados do status:', response.status_data);
+
                     } else {
                         console.log('myChart não está definido ou não possui dados.');
                     }
@@ -157,46 +156,52 @@
                 error: function(error) {
                     console.log('Erro na requisição AJAX:', error);
                 }
+
             });
         }
         
         // Função para atualizar a legenda
-        // Função para atualizar a legenda
         function atualizarLegenda(statusData, totalFormularios) {
             var legendContainer = $('#statusLegend');
             legendContainer.empty(); // Limpa a legenda existente
-
+        
             var labels = Object.keys(statusData);
-            var cores = ['#FFFF33','#FF5733', '#5733FF', '#229A00'];
-
+            var cores = ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',];
+        
             for (var i = 0; i < labels.length; i++) {
                 var label = labels[i];
                 var cor = cores[i];
                 var count = statusData[label];
                 var percentual = ((count / totalFormularios) * 100);
-
+        
                 // Cria um elemento de legenda
                 var legendItem = $('<div class="legend-item"></div>');
                 var colorBox = $('<div class="legend-color-box"></div>').css('background-color', cor);
                 var legendText = $('<span class="legend-text"></span>').text(label + ' (' + percentual + '%)');
-
+        
                 // Adiciona o elemento de legenda ao contêiner
                 legendItem.append(colorBox).append(legendText);
                 legendContainer.append(legendItem);
             }
         }
+        
 
       
         // Função para atualizar o gráfico
         function atualizarGrafico(statusData) {
             var labels = Object.keys(statusData);
             var data = Object.values(statusData);
-            
+        
             // Atualiza o gráfico com os novos dados
             myChart.data.labels = labels;
             myChart.data.datasets[0].data = data;
+        
+            // Se necessário, ajuste o máximo no eixo y
+            myChart.options.scales.y.max = totalFormularios;
+        
             myChart.update();
         }
+        
     
         // Chama a função ao carregar a página para configurar os valores padrão
         $(document).ready(function () {
@@ -207,12 +212,8 @@
         function configurarValoresPadrao() {
             var anoSelecionado = $('#anoDropdown').val();
             var ctx = document.getElementById('statusChart').getContext('2d');
-
-            // Obtenha a quantidade total de formulários
             var totalFormularios = parseInt($('#totalFormularios').text());
-
-            // Cores diferentes para cada barra
-            var cores = ['#FFFF33','#FF5733', '#5733FF', '#229A00'];
+            var cores = ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',];
 
             // Inicializa o gráfico
             myChart = new Chart(ctx, {
@@ -220,7 +221,7 @@
                 data: {
                     labels: [],
                     datasets: [{
-                        label: false,
+                        label: 'Formulario',
                         data: [],
                         backgroundColor: cores,
                         borderColor: cores,
@@ -232,27 +233,18 @@
                             beginAtZero: true
                         },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            max: totalFormularios 
                         }
                     },
                     legend: {
                             display: false
                     },
                     title: {
-                        display: false
+                        display: true
                     },
                     maintainAspectRatio: true,
                     responsive: true,
-                    tooltips: {
-                        callbacks: {
-                            label: function(context) {
-                                var label = context.dataset.label || '';
-                                label += ': ' + context.parsed.y + ' (' + ((context.parsed.y / totalFormularios) * 100).toFixed(2) + '%)';
-                                return label;
-                            }
-                        }
-                    }
-
                 }
             });
 

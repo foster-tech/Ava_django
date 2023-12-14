@@ -8,3 +8,4 @@ class FormularioAdminForm(forms.ModelForm):
         model = Formulario
         fields = ['nome_formulario','ano','status','comentario','responsaveis', 'validadores']
         
+        

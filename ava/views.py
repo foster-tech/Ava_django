@@ -8,6 +8,10 @@ from django.http import JsonResponse
 import logging
 
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+
 def index(request):
     ano_atual = datetime.now().year
     
@@ -18,13 +22,13 @@ def index(request):
     formularios_anos_anteriores = []
     
     indicadores = Indicador.objects.all()
+    
     for indicador in indicadores:
         if indicador.ano == ano_atual:
             indicadores_ano_atual.append(indicador)
         else:
             indicadores_anos_anteriores.append(indicador)
-
-    # Recupera formulários
+            
     formularios = Formulario.objects.all()
     
     for formulario in formularios:
@@ -41,16 +45,14 @@ def index(request):
     total_formularios_anterior = len(formularios_anos_anteriores)
     total_indicadores_anterior = len(indicadores_anos_anteriores)
     
-    # Obtenha todos os status, mesmo aqueles sem formulários associados
+    
     all_status = Status.objects.all()
-
-    # Obtenha a contagem de formulários para cada status
     status_count = Formulario.objects.values('status__valor').annotate(count=Count('status__valor'))
 
-    # Crie um dicionário para armazenar a contagem de formulários para cada status
+    # Cria um dicionário para armazenar a contagem de formulários para cada status
     status_data = {status.valor: 0 for status in all_status}
 
-    # Atualize o dicionário com a contagem real de formulários
+    # Atualiza o dicionário com a contagem real de formulários
     for item in status_count:
         status_valor = item['status__valor']
         status_data[status_valor] = item['count']
@@ -66,8 +68,6 @@ def index(request):
         data_i = tarefa.data_inicio.strftime('%Y-%m-%d')
         data_f = tarefa.data_fim.strftime('%Y-%m-%d')
         df.append(dict(Task=tarefa.nome, Start=data_i, Finish=data_f)) 
-    
-    
     
     
     fig = ff.create_gantt(df, index_col=False, title=None, show_hover_fill=False)
@@ -89,7 +89,7 @@ def index(request):
         'data': data,
         'graph_html': graph_html, 
         'anos': anos_disponiveis
-    }
+        }
     
     return render(request, 'index.html', context=context)
 
@@ -98,31 +98,29 @@ def atualizar_totais(request):
 
     total_indicadores = 0
     total_formularios = 0
+    total_formularios_pendentes = 0
 
-    # E de indicadores e formulários para o ano selecionado
     if ano_selecionado:
         total_indicadores = Indicador.objects.filter(ano=ano_selecionado).count()
         total_formularios = Formulario.objects.filter(ano=ano_selecionado).count()
+        total_formularios_pendentes = Formulario.objects.filter(ano=ano_selecionado).exclude(status__valor='3').count()
     
-    # Obter todos os status possíveis
     todos_status = Status.objects.all()
 
-    # Crie um dicionário para armazenar a contagem de formulários para cada status
+    # Cria um dicionário para armazenar a contagem de formulários para cada status
     status_data = {status.get_valor_display(): 0 for status in todos_status}
 
     # Contagem de formulários por status para o ano selecionado
     status_counts = Formulario.objects.filter(ano=ano_selecionado).values('status__valor').annotate(count=Count('status__valor'))
 
-    # Atualize o dicionário com a contagem real de formulários
+    # Atualiza o dicionário com a contagem real de formulários
     for item in status_counts:
         status_valor = item['status__valor']
         legenda_status = Status.objects.get(valor=status_valor).get_valor_display()
         status_data[legenda_status] = item['count']
 
 
-
-    # Retorna os totais como uma resposta JSON
-    return JsonResponse({'total_indicadores': total_indicadores, 'total_formularios': total_formularios, 'status_data': status_data})
+    return JsonResponse({'total_indicadores': total_indicadores, 'total_formularios': total_formularios, 'total_formularios_pendentes': total_formularios_pendentes,'status_data': status_data})
 
 def formularios(request):
     ano_atual = datetime.now().year
@@ -134,11 +132,11 @@ def formularios(request):
 
     # Para cada formulário, obtenha suas informações e indicadores relacionados
     for formulario in formularios:
-        dados_formulario = {
+        dado_formulario = {
             'formulario': formulario,
             'indicadores': formulario.indicador_set.all()  # Isso assume que o nome do relacionamento é 'indicador_set'
         }
-        dados_formularios.append(dados_formulario)
+        dados_formularios.append(dado_formulario)
 
     context = {
         'dados_formularios': dados_formularios,
@@ -180,6 +178,43 @@ def indicador(request, formulario_id):
     
     
     return render(request, 'indicador.html', context=context)
+
+def consolidado(request):
+    ano_atual = datetime.now().year
+    ultimos_tres_anos = list(range(ano_atual, ano_atual - 3, -1))
+    
+    formularios = Formulario.objects.all()
+    
+    indicadores = Indicador.objects.all()
+    protocolos = ProtocoloIndicador.objects.all()
+
+    dados_indicadores = {}
+
+    # Criar um dicionário de protocolos para facilitar a busca
+    dict_protocolos = {protocolo.indicador.gri.numero: protocolo.descricao for protocolo in protocolos}
+
+    for indicador in indicadores:
+        numero_gri = indicador.gri.numero
+        ano = indicador.ano
+        tema = indicador.tema
+
+        # Se o GRI ainda não estiver no dicionário, crie uma nova entrada
+        if numero_gri not in dados_indicadores:
+            dados_indicadores[numero_gri] = {'tema': tema, 'gri': numero_gri, 'anos': [ano], 'protocolo': dict_protocolos.get(numero_gri, '')}
+        else:
+            # Se o GRI já estiver no dicionário, adicione o ano à lista existente
+            dados_indicadores[numero_gri]['anos'].append(ano)
+            # Adicione a descrição do protocolo
+            dados_indicadores[numero_gri]['protocolo'] = dict_protocolos.get(numero_gri, '')
+
+    
+    context = {
+        'ultimos_tres_anos': ultimos_tres_anos,
+        'formularios': formularios,
+        'dados_indicadores': dados_indicadores
+    }
+    
+    return render(request, 'consolidado.html', context=context)
 
 def informes(request):
     return render(request, 'informes.html')

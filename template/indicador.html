@@ -134,10 +134,10 @@
                                         {% for tb in conteudo_anterior %}
                                         <div class="card mb-3">
                                             <button class="card-header d-flex justify-content-between"  id="toggle-content" type="button" data-target="card{{ conteudo_anterior.id }}-body" style="background-color: #6ba39c; color: #fff; border: none">
-                                            <div>
-                                                {{tb.ano_criacao}}
-                                            </div>
-                                        </button>
+                                                <div>
+                                                    {{tb.ano_criacao}}
+                                                </div>
+                                            </button>
                                             <div class="card-body text-primary" id="card{{ conteudo_anterior.id }}-body" style="display:none;">
                                                     <table class="table table-bordered table-hover table-striped">
                                                         <thead>
@@ -194,14 +194,17 @@
                                                     </table>
                                                 
                                                 <br />
-                                            </div>
-                                        
-                                                    
-                                                </div>                                 
-                                    <br />
-                                    {% endfor %}                 
-                                </div> 
-                            </div>
+                                                    {% for p in tb.perguntas_set.all %}
+                                                        <p style="color: black">{{p.pergunta}}</p>
+                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" disabled>{{p.resposta}}</textarea>
+                                                    <br/>
+                                                    {% endfor %}
+                                            </div>          
+                                        </div>                                 
+                                        <br />
+                                        {% endfor %}                 
+                                    </div> 
+                                </div>
                                 <br  />
                                 <div class="card">
                                     <div class="card-body">
@@ -259,7 +262,7 @@
                     
                     <!-- El tab panel del análisis -->
                     <div class="tab-pane" id="analisis" role="tabpanel" aria-labelledby="analisis-tab" tabindex="0">
-                        <main class="container">
+                        <main style="width: 80%; margin-left: 60px" class="container">
                                 <br  />
                             <div class="card" id="analisis">
                                 <div class="card-body">
@@ -287,7 +290,7 @@
                     
                      <!-- El tab panel del Protocolo -->
                     <div class="tab-pane" id="protocolo" role="tabpanel" aria-labelledby="protocolo-tab" tabindex="0">
-                        <main class="container">
+                        <main style="width: 80%; margin-left: 60px" class="container">
                             <div id="parametros">
                                 {% for p in definicoes_protocolo_lista %}
                                 <br  />
@@ -448,6 +451,7 @@
             novaLinha.id = 'linha_' + numLinhas; // Adiciona um ID único para a nova linha
         
             novaLinha.innerHTML = `
+                <td><textarea class="form-control" rows="1"></textarea></td>
                 <td><textarea class="form-control" rows="1"></textarea></td>
                 <td><textarea class="form-control" rows="1"></textarea></td>
                 {% autoescape off %}

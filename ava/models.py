@@ -48,10 +48,11 @@ class GRI(models.Model):
     
 class Status(models.Model):
     STATUS_CHOICES = [
-        ('0', 'Iniciado'),
+        ('0', 'Em Andamento'),
         ('1', 'Não Iniciado'),
         ('2', 'A Validar'),
-        ('3','Concluido' )
+        ('3','Concluido' ),
+        ('4', 'Em Atraso')
     ]
     
     valor = models.CharField(choices=STATUS_CHOICES, max_length=140)
@@ -99,7 +100,6 @@ class TabelaConteudoIndicador(models.Model):
     possui_fabricante = models.CharField(choices=OPTION_CHOICES, max_length=1, default="")
     ano_criacao  = models.IntegerField(default=datetime.now().year)
     coluna_fixa = models.CharField(max_length=255, blank=True, null=True)
-    resposta = models.TextField(blank=True, null=True)
     
     colunas = models.JSONField(blank=True, null=True)
     dados = models.JSONField(blank=True, null=True)  
@@ -111,6 +111,7 @@ class DescricaoTabela(models.Model):
 class Perguntas(models.Model):
     tabela = models.ForeignKey(TabelaConteudoIndicador, on_delete=models.CASCADE, default=None)
     pergunta = models.TextField(default="") 
+    resposta = models.TextField(default="" , blank=True, null=True)
     
 class Indicador(models.Model):
     

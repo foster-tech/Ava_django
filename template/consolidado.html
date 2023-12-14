@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<!-- El navbar de arriba y las cosas de boostrap -->
+{% include "partials/header.html" %}
+
+    <!-- El contenido debajo del navbar -->
+    <div class="row">
+    
+        <!-- La barra lateral de la izquierda -->
+        {% include "partials/nav_side_bar.html" %}
+        
+        <!-- El contenido de la derecha -->
+        <div class="col mt-4" >
+            <div class="row">
+                <div class="tab" id="">
+                    <main class="container">
+                        <div class="card">
+                            <br/>
+                            <div class="mt-2">
+                                <div class="card" style="margin-right: 20px; margin-left:20px">
+                                    <h5 class="card-header" style="background-color: #6ba39c; color: #fff">Score Card</h5>
+                                    <div class="card-body" style="font-size: 18px;">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tema Material</th>
+                                                    <th >Indicadores</th>
+                                                    <th>Medida/Unidade</th>
+                                                    {% for ano in ultimos_tres_anos %}
+                                                        <th>{{ano}}</th>
+                                                    {% endfor %}
+                                                    <th>Tendencia</th>
+                                                    <th>Comentarios</th>
+                                                </tr>
+                                            </thead>
+                                            
+                                            <tbody>
+                                                {% for dados in dados_indicadores.values %}
+                                                    <tr>
+                                                        <td>{{ dados.tema }}</td>
+                                                        <td class="cursor-pointer text-decoration-none text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ dados.protocolo }}">{{ dados.gri }}</td>
+                                                        <td>-</td>
+                                                        {% for ano in ultimos_tres_anos %}
+                                                        <td>{{ dados.anos|slice:":1"|default_if_none:''|default:'' }}</td>
+                                                    {% endfor %}
+                                                    <td>-</td>
+                                                    <td><input type="text" class="form-control"/></td>
+                                                    
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                            
+                                          </table>
+                                    </div>
+                                    
+                                </div>
+                                <br/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>     
+        </div>
+ 
+<script>
+ </script>
+        
+{% endblock %}

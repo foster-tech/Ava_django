@@ -23,16 +23,15 @@ class DefinicoesProtocoloInline(admin.TabularInline):
 @admin.register(Formulario)
 class FormularioAdmin(admin.ModelAdmin):
      inlines =  [InfoHeadInline]
-     list_display = ('nome_formulario','ano')
+     list_display = ('nome_formulario','status','ano')
      form = FormularioAdminForm
      filter_horizontal = ('responsaveis', 'validadores') 
 
 @admin.register(TabelaConteudoIndicador)
 class TabelaConteudoIndicadorFormularioAdmin(admin.ModelAdmin):
     inlines = [DescricaoTabelaInline, PerguntasInline]
-    list_display = ('formulario','ano_criacao','resposta')
-    list_editable = ('resposta',)
-    
+    list_display = ('formulario','ano_criacao')
+        
 @admin.register(Indicador)
 class IndicadorAdmin(admin.ModelAdmin):
     list_display = ('gri','tema','categoria', 'ano')

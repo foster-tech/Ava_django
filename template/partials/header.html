@@ -1,6 +1,6 @@
 {% load static %}
 
-<nav class="navbar navbar-expand-md" style="background-color: #6ba39c1b">
+<nav class="navbar navbar-expand-md" style="background-color: #6ba39c1b; border-bottom: 1px solid #DADADA; min-width: 100vw">
     <div class="container-fluid">
 
         <!-- La parte de la izquierda del navbar -->
@@ -9,7 +9,7 @@
         {% else %}
             <a style="position: relative;" class="navbar-brand" href="/">
         {% endif %}
-                <img style="margin-left: 20px" width="75" src="{% static '/img/ava.png'  %}" alt="DeberíaIrUnLogoAquí">
+                <img style="margin-left: 20px; margin-bottom: 5px" width="75" src="{% static '/img/ava.png'  %}" alt="UmaLogoAqui">
             </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -18,8 +18,7 @@
             <ul class="navbar-nav col-11">
             </ul>
 
-            <!-- La parte de la derecha del navbar -->
-            <ul class="navbar-nav row">
+            <ul class="navbar-nav row" style="margin-right: 20px;">
                   
                 <li class="nav-item col-4">
                     <div class="dropdown">
@@ -59,3 +58,4 @@
         </div>
     </div>
 </nav>
+
