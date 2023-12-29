@@ -1,0 +1,985 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+{% include "partials/header.html" %}
+
+    <div class="row">
+    
+        {% include "partials/nav_side_bar.html" %}
+        <div class="col mt-4" >
+            <div class="row">
+                <div class="tab" id="">
+                    <main class="container">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-row justify-content-between">
+                                    <div class="d-flex flex-row mt-2 justify-content-start ms-2">
+                                        <div style="padding-right: 7px">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-check" viewBox="0 0 16 16">
+                                                <path d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+                                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z"/>
+                                            </svg>
+                                        </div>
+                                        <h5>Tarefas e status</h5>
+                                    </div>
+                                    <div style="position: relative; width: 300px; height: 300px; margin-right: 50px">
+                                        <canvas id="gaugeChart"></canvas>
+                                        <div id="pointer" style="position: absolute; width: 4px; height: 120px; background-color: black; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); transform-origin: bottom;"></div>
+                                        <div id="labelContainer" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <button class="card-header p-2" style="background-color: #6ba39c; color: #fff; border:none" id="toggle-content" type="button" data-target="cardpreparacao-body">
+                                        <div class="d-flex align-items-center">
+                                            <h1 class="fs-4 ms-2"  style="margin-right: 977px">Preparação</h1>
+                                            <img src="{% static '/img/Ellipse-1.png'  %}" class="ms-1" height="20">
+                                        </div>
+                                    </button>
+                                    <div class="card-body" style="display:none;">
+                                        <div class="d-flex ">
+                                            <table class="table table-hover" style="width: 60%">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Cronograma</th>
+                                                        <th scope="col">Quem</th>
+                                                        <th scope="col">Inicio</th>
+                                                        <th scope="col">Fim</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar o cronograma</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar o escopo de indicadores</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">25-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Enviar o email de inicio de processo</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">11-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Preparar as fichas de coleta</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">BM2B</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">12-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar tema do relatorio</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">24-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar estrutura do relatorio</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Preparar as fichas de coleta</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">BM2B</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Confirmar os entrevistados</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">10-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Confirmar os envolvidos do processo</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">BM2B</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">17-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Preparar e agendar entrevistas</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">23-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">27-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">100%</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex flex-column ms-5 mt-3">
+                                                <div class="d-flex">
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Não iniciado</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Concluido</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em andamento</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-atraso.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em atraso</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4">
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Progressos/Decisões</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Pontos de atenção</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Próximos passos</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br/>
+
+                                <div class="card">
+                                    <button class="card-header p-2" style="background-color: #6ba39c; color: #fff; border:none" id="toggle-content" type="button" data-target="cardpreparacao-body">
+                                        <div class="d-flex align-items-center">
+                                            <h1 class="fs-4 ms-2" style="margin-right: 1029px">Coleta</h1>
+                                            <img src="{% static '/img/Ellipse-2.png'  %}" class="ms-1" height="20">
+                                        </div>
+                                    </button>
+                                    <div class="card-body" style="display:none;">
+                                        <div class="d-flex">
+                                            <table class="table table-hover" style="width: 60%; height: 300px">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Cronograma</th>
+                                                        <th scope="col">Quem</th>
+                                                        <th scope="col">Inicio</th>
+                                                        <th scope="col">Fim</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center " style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Coletar formas de gestão</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">27-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">21-12</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Realizar as entrevistas</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Laura</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">27-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">21-12</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Coletar conteúdos gerais</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">BM2B</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">26-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">10%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Coletar indicadores</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">BM2B</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-12</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">10-01</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex flex-column ms-5 mt-3">
+                                                <div class="d-flex">
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Não iniciado</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Concluido</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em andamento</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-atraso.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em atraso</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Progressos/Decisões</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Pontos de atenção</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Próximos passos</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br/>
+
+                                <div class="card">
+                                    <button class="card-header p-2" style="background-color: #6ba39c; color: #fff; border:none" id="toggle-content" type="button" data-target="cardpreparacao-body">
+                                        <div class="d-flex align-items-center">
+                                            <h1 class="fs-4 ms-2" style="margin-right: 1005px">Redação</h1>
+                                            <img src="{% static '/img/Ellipse-2.png'  %}" class="ms-1" height="20">
+                                        </div>
+                                    </button>
+                                    <div class="card-body" style="display:none;">
+                                        <div class="d-flex ">
+                                            <table class="table table-hover" style="width: 60%">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Cronograma</th>
+                                                        <th scope="col">Quem</th>
+                                                        <th scope="col">Inicio</th>
+                                                        <th scope="col">Fim</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Redigir V1</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Renato</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">21-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar V1</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">25-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Ajustar e gerar V2</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Laura</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">11-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar V2</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">12-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Ajustar e gerar V3</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">24-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar V3</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Realizar revisão ortografica</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Finalizar texto, revisar dados e gráficos</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">10-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Enviar para diagramação</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">17-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Realizar auditoria</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">23-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">27-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">0%</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex flex-column ms-5 mt-3">
+                                                <div class="d-flex">
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Não iniciado</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Concluido</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em andamento</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-atraso.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em atraso</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4">
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Progressos/Decisões</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Pontos de atenção</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Próximos passos</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br/>
+
+                                <div class="card">
+                                    <button class="card-header p-2" style="background-color: #6ba39c; color: #fff; border:none" id="toggle-content" type="button" data-target="cardpreparacao-body">
+                                        <div class="d-flex align-items-center">
+                                            <h1 class="fs-4 ms-2" style="margin-right: 850px">Diagrama e finalização</h1>
+                                            <img src="{% static '/img/Ellipse-3.png'  %}" class="ms-1" height="20">
+                                        </div>
+                                    </button>
+                                    <div class="card-body" style="display:none;">
+                                        <div class="d-flex ">
+                                            <table class="table table-hover" style="width: 60%">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Cronograma</th>
+                                                        <th scope="col">Quem</th>
+                                                        <th scope="col">Inicio</th>
+                                                        <th scope="col">Fim</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Diagramar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Laura</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Validar PDF</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Laura</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">25-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Ajustar PDF</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">11-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/em-atraso.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Entregar pdf português</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Laura</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">15-09</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">12-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Traduzir texto word para inglês</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">24-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Diagramar versão inglês</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Revisar PDF inglês</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Solar</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">09-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">06-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Ajustar PDF inglês</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">10-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="d-flex align-items-center" style="font-size: 1em">
+                                                            <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                            <p class="ms-2" style="margin-top: 13px">Entregar PDF inglês</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">Bianca</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">16-10</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">17-11</p>
+                                                        </td>
+                                                        <td>
+                                                            <p class="ms-2" style="margin-top: 13px">20%</p>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="d-flex flex-column ms-5 mt-3">
+                                                <div class="d-flex">
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/nao-iniciado.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Não iniciado</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/concluido.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size:12px">Concluido</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-andamento.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em andamento</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <img src="{% static '/img/em-atraso.png'  %}" class="ms-1" height="20">
+                                                        <p class="ms-2" style="font-size: 12px">Em atraso</p>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4">
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Progressos/Decisões</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Pontos de atenção</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                    <br/>
+                                                    <div class="d-flex flex-column ms-3">
+                                                        <label>Próximos passos</label>
+                                                        <input class="form-control" type="text" style="height:170px; width:400px;"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.card-header').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardBody = this.nextElementSibling;
+    
+                if (cardBody.style.display === 'none' || cardBody.style.display === '') {
+                    cardBody.style.display = 'block';
+                } else {
+                    cardBody.style.display = 'none';
+                }
+            });
+        });
+
+        var labels = ['Nome1', 'Nome2', 'Nome3', 'Nome4'];
+        var values = [25, 25, 25, 25];
+
+        var data = {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: ['rgba(244, 204, 204, 1)', 'rgba(253, 219, 176, 1)', 'rgba(255, 229, 153, 1)', 'rgba(182, 215, 168, 1)'],
+                borderWidth: 0,
+            }]
+        };
+
+        var options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            rotation: 1 * Math.PI,
+            circumference: 1 * Math.PI,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            plugins: {
+                legend: false
+            }
+        };
+
+        var ctx = document.getElementById('gaugeChart').getContext('2d');
+        var myGaugeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: options,
+        });
+
+        var pointer = document.getElementById('pointer');
+        var labelContainer = document.getElementById('labelContainer');
+
+        function updatePointer() {
+            var centerX = (myGaugeChart.canvas.width / 2);
+            var centerY = (myGaugeChart.canvas.height / 2);
+            var radius = myGaugeChart.outerRadius;
+
+            labels.forEach((label, index) => {
+                var angle = myGaugeChart.config.rotation + myGaugeChart.config.circumference * (values[index] / 100);
+
+                var x = centerX + Math.cos(angle) * (radius * 0.9);
+                var y = centerY + Math.sin(angle) * (radius * 0.9);
+
+                // Adiciona a borda colorida à categoria onde o ponteiro está
+                var segmentIndex = myGaugeChart.getElementAtAngle(angle);
+                if (segmentIndex.length > 0) {
+                    var segment = myGaugeChart.getDatasetMeta(0).data[segmentIndex[0]._index];
+                    segment.custom = {
+                        borderColor: 'black', // Cor da borda da categoria
+                        borderWidth: 2 // Largura da borda
+                    };
+                }
+
+                // Adiciona texto dentro da barra
+                var labelElement = document.createElement('div');
+                labelElement.textContent = label;
+                labelElement.style.position = 'absolute';
+                labelElement.style.left = x + 'px';
+                labelElement.style.top = y + 'px';
+                labelElement.style.transform = 'translate(-50%, -50%)';
+                labelElement.style.textAlign = 'center';
+                labelElement.style.fontWeight = 'bold';
+                labelElement.style.color = 'black';
+
+                labelContainer.appendChild(labelElement);
+            });
+
+            // Atualiza o gráfico para refletir as alterações na borda
+            myGaugeChart.update();
+        }
+
+        // Atualiza o ponteiro
+        updatePointer();
+    
+    </script>
+    
+        
+{% endblock %}

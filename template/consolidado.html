@@ -30,7 +30,7 @@
                                                     <th>Tema Material</th>
                                                     <th >Indicadores</th>
                                                     <th>Medida/Unidade</th>
-                                                    {% for ano in ultimos_tres_anos %}
+                                                    {% for ano in ultimos_tres_anos reversed%}
                                                         <th>{{ano}}</th>
                                                     {% endfor %}
                                                     <th>Tendencia</th>
@@ -44,8 +44,8 @@
                                                         <td>{{ dados.tema }}</td>
                                                         <td class="cursor-pointer text-decoration-none text-dark" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ dados.protocolo }}">{{ dados.gri }}</td>
                                                         <td>-</td>
-                                                        {% for ano in ultimos_tres_anos %}
-                                                        <td>{{ dados.anos|slice:":1"|default_if_none:''|default:'' }}</td>
+                                                        {% for ano in ultimos_tres_anos reversed%}
+                                                        <td>{{ ano}}</td>
                                                     {% endfor %}
                                                     <td>-</td>
                                                     <td><input type="text" class="form-control"/></td>

@@ -1,8 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-from itertools import zip_longest
 from datetime import date, datetime
 from django.db.models import Count
-from .models import Indicador, GRI, ProtocoloIndicador, Status, Tarefa, Formulario, TabelaConteudoIndicador, DefinicoesProtocolo, InfoHead, Formulario
+from .models import Indicador, ProtocoloIndicador, Status, Tarefa, Formulario, TabelaConteudoIndicador, DefinicoesProtocolo, InfoHead, Formulario
 import plotly.figure_factory as ff
 from django.http import JsonResponse
 import logging
@@ -85,7 +84,7 @@ def index(request):
         'indicadores_anos_anteriores': total_indicadores_anterior,
         'formularios_anos_anteriores': total_formularios_anterior,
         'ano_atual': ano_atual,
-        'labels': labels, 
+        'labelsStatus': labels, 
         'data': data,
         'graph_html': graph_html, 
         'anos': anos_disponiveis
@@ -105,13 +104,11 @@ def atualizar_totais(request):
         total_formularios = Formulario.objects.filter(ano=ano_selecionado).count()
         total_formularios_pendentes = Formulario.objects.filter(ano=ano_selecionado).exclude(status__valor='3').count()
     
-    todos_status = Status.objects.all()
-
-    # Cria um dicionário para armazenar a contagem de formulários para cada status
-    status_data = {status.get_valor_display(): 0 for status in todos_status}
-
     # Contagem de formulários por status para o ano selecionado
     status_counts = Formulario.objects.filter(ano=ano_selecionado).values('status__valor').annotate(count=Count('status__valor'))
+
+    # Cria um dicionário para armazenar a contagem de formulários para cada status
+    status_data = {status.get_valor_display(): 0 for status in Status.objects.all()}
 
     # Atualiza o dicionário com a contagem real de formulários
     for item in status_counts:
@@ -119,8 +116,8 @@ def atualizar_totais(request):
         legenda_status = Status.objects.get(valor=status_valor).get_valor_display()
         status_data[legenda_status] = item['count']
 
-
     return JsonResponse({'total_indicadores': total_indicadores, 'total_formularios': total_formularios, 'total_formularios_pendentes': total_formularios_pendentes,'status_data': status_data})
+
 
 def formularios(request):
     ano_atual = datetime.now().year
@@ -215,6 +212,12 @@ def consolidado(request):
     }
     
     return render(request, 'consolidado.html', context=context)
+
+def status(request):
+    return render(request, 'status.html')
+
+def comunicados(request):
+    return render(request, 'comunicados.html')
 
 def informes(request):
     return render(request, 'informes.html')

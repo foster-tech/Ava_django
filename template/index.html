@@ -18,14 +18,13 @@
                             <div class="card-body p-4">
                               <div class="d-flex flex-row mt-2 justify-content-start">
                                 <div style="padding-right: 7px">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
-                                  <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
-                                  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                                  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                                </svg>
-                              </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-data" viewBox="0 0 16 16">
+                                    <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                    </svg>
+                                </div>
                                 <h5>Painel</h5>
-
                               </div>
                               <br/>
                               <div class="d-flex flex-row mt-2 justify-content-center">
@@ -88,7 +87,7 @@
             text-align: center;
             margin-bottom : 10px;
             border-radius: 6px;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* offsetX, offsetY, blurRadius, color */
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); 
             font-weight: bold;
         }
 
@@ -130,6 +129,7 @@
 
     <script>
         var myChart; 
+        var totalFormularios; // Variável global para armazenar a quantidade total de formulários
     
         function atualizarTotaisEAtualizarGrafico(anoSelecionado) {
             $.ajax({
@@ -140,14 +140,14 @@
                     $('#totalIndicadores').text(response.total_indicadores);
                     $('#totalFormularios').text(response.total_formularios);
                     $('#formulariosPendentes').text(response.total_formularios_pendentes);
-
-        
-                    // Garante que myChart seja definido antes de chamar a função
+    
+                    totalFormularios = response.total_formularios; // Atualiza a variável global
+    
                     if (myChart && myChart.data) {
                         atualizarGrafico(response.status_data);
-                        atualizarLegenda(response.status_data, response.total_formularios);
+                        atualizarLegenda(response.status_data);
                         console.log('Dados do status:', response.status_data);
-
+    
                     } else {
                         console.log('myChart não está definido ou não possui dados.');
                     }
@@ -156,14 +156,13 @@
                 error: function(error) {
                     console.log('Erro na requisição AJAX:', error);
                 }
-
+    
             });
         }
         
-        // Função para atualizar a legenda
-        function atualizarLegenda(statusData, totalFormularios) {
+        function atualizarLegenda(statusData) {
             var legendContainer = $('#statusLegend');
-            legendContainer.empty(); // Limpa a legenda existente
+            legendContainer.empty(); 
         
             var labels = Object.keys(statusData);
             var cores = ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',];
@@ -174,47 +173,44 @@
                 var count = statusData[label];
                 var percentual = ((count / totalFormularios) * 100);
         
-                // Cria um elemento de legenda
                 var legendItem = $('<div class="legend-item"></div>');
                 var colorBox = $('<div class="legend-color-box"></div>').css('background-color', cor);
-                var legendText = $('<span class="legend-text"></span>').text(label + ' (' + percentual + '%)');
+                var legendText = $('<span class="legend-text"></span>').text(label + ' (' + percentual.toFixed(0) + '%)');
         
-                // Adiciona o elemento de legenda ao contêiner
                 legendItem.append(colorBox).append(legendText);
                 legendContainer.append(legendItem);
             }
         }
         
-
-      
-        // Função para atualizar o gráfico
+    
         function atualizarGrafico(statusData) {
             var labels = Object.keys(statusData);
-            var data = Object.values(statusData);
-        
-            // Atualiza o gráfico com os novos dados
+            var data = labels.map(function(status) {
+                var count = statusData[status] || 0;
+                return (count / totalFormularios) * 100; // Convert count to percentage
+            });
+
+            // Adiciona o valor total geral ao array de dados
+            data.push(100); // Set the total value as 100%
+
             myChart.data.labels = labels;
-            myChart.data.datasets[0].data = data;
-        
-            // Se necessário, ajuste o máximo no eixo y
-            myChart.options.scales.y.max = totalFormularios;
-        
+            myChart.data.datasets[0].data = [...data, 0];
+
+            myChart.options.scales.y.ticks = undefined;
+            
             myChart.update();
         }
         
-    
-        // Chama a função ao carregar a página para configurar os valores padrão
+        
+        
         $(document).ready(function () {
             configurarValoresPadrao();
         });
     
-        // Função para configurar os valores padrão
         function configurarValoresPadrao() {
             var anoSelecionado = $('#anoDropdown').val();
             var ctx = document.getElementById('statusChart').getContext('2d');
-            var totalFormularios = parseInt($('#totalFormularios').text());
-            var cores = ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',];
-
+    
             // Inicializa o gráfico
             myChart = new Chart(ctx, {
                 type: 'horizontalBar',
@@ -223,19 +219,24 @@
                     datasets: [{
                         label: 'Formulario',
                         data: [],
-                        backgroundColor: cores,
-                        borderColor: cores,
+                        backgroundColor: ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',],
+                        borderColor: ['#A4C2F4', '#B4A7D6','#FFE599', '#B6D7A8','#F4CCCC',],
                     }]
                 },
                 options: {
                     scales: {
                         x: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + '%';
+                                }
+                            }
                         },
                         y: {
                             beginAtZero: true,
-                            max: totalFormularios 
-                        }
+                            
+                        },
                     },
                     legend: {
                             display: false
@@ -247,17 +248,17 @@
                     responsive: true,
                 }
             });
-
+    
             atualizarTotaisEAtualizarGrafico(anoSelecionado);
         }
-
     
-        // Adiciona um evento para chamar a função quando o ano é alterado
         $('#anoDropdown').change(function() {
             var anoSelecionado = $(this).val();
             atualizarTotaisEAtualizarGrafico(anoSelecionado);
         });
     </script>
+    
+    
     
         
  
