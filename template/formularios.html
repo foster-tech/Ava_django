@@ -23,6 +23,13 @@
                                 <br  />
                             <div class="card">
                                 <div class="card-body">
+                                    <div class="btn-group" role="group">
+                                        {% for status in formularios_status %}
+                                            <button type="button" class="btn btn-primary filter-status" data-status="{{ status.0 }}">
+                                                {{ status.1 }}
+                                            </button>
+                                        {% endfor %}
+                                    </div>
                                     <div class="mb-6">
                                         <table class="table table-borderless table-hover table-striped">
                                             <thead>
@@ -82,45 +89,28 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var filterTriggers = document.querySelectorAll(".filter-trigger");
+        document.addEventListener('DOMContentLoaded', function() {
+            var filterButtons = document.querySelectorAll('.filter-status');
     
-            filterTriggers.forEach(function(trigger) {
-                trigger.addEventListener("click", function() {
-                    var filtro = this.dataset.filtro;
-                    var dropdown = document.querySelector("#" + filtro + "-dropdown");
-    
-                    // Posiciona o dropdown abaixo do th
-                    var rect = this.getBoundingClientRect();
-                    dropdown.style.top = rect.bottom + "px";
-                    dropdown.style.left = rect.left + "px";
-    
-                    // Mostra ou esconde o dropdown
-                    dropdown.style.display = (dropdown.style.display === "none") ? "block" : "none";
+            filterButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var status = this.getAttribute('data-status');
+                    filterTableByStatus(status);
                 });
             });
     
-            var filterDropdownLinks = document.querySelectorAll(".filter-dropdown a");
+            function filterTableByStatus(status) {
+                var rows = document.querySelectorAll('.table tbody tr');
     
-            filterDropdownLinks.forEach(function(link) {
-                link.addEventListener("click", function(event) {
-                    event.preventDefault();
-                    var filtro = this.dataset.filtro;
-                    var valorFiltro = this.innerText;
-    
-                    // Aplica o filtro à tabela
-                    var cells = document.querySelectorAll("." + filtro);
-                    cells.forEach(function(cell) {
-                        var row = cell.parentElement;
-                        row.style.display = (cell.innerText.trim() !== valorFiltro) ? "none" : "";
-                    });
-    
-                    // Esconde todos os dropdowns
-                    document.querySelectorAll(".filter-dropdown").forEach(function(dropdown) {
-                        dropdown.style.display = "none";
-                    });
+                rows.forEach(function(row) {
+                    var rowStatus = row.querySelector('.status').innerText.trim();
+                    if (status === 'all' || rowStatus === status) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
                 });
-            });
+            }
         });
     </script>
     

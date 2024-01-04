@@ -84,23 +84,44 @@ TEMPLATES_DIRS = (
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
+DATABASES_COMMON = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', str(os.getenv('NAME'))),
-        'USER': os.environ.get('DB_USER', str(os.getenv('USER'))),
-        'PASSWORD': os.environ.get('DB_PASS', str(os.getenv('PASSWORD'))),
-        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
+DATABASES_PROD = {
+    'default': {
+        'NAME': 'fncrexox',
+        'USER': 'fncrexox',
+        'PASSWORD': '0uiQiWxL26POjrn62sPXVYYVL80vAVlY',
+        'HOST': 'mahmud.db.elephantsql.com',
+        **DATABASES_COMMON['default'],
+    }
+}
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+
+DATABASES_STAGE = {
+    'default': {
+        'NAME': os.environ.get('STAGE_DB_NAME', str(os.getenv('STAGE_NAME'))),
+        'USER': os.environ.get('STAGE_DB_USER', str(os.getenv('STAGE_USER'))),
+        'PASSWORD': os.environ.get('STAGE_DB_PASS', str(os.getenv('STAGE_PASSWORD'))),
+        'HOST': 'staging-database-host',
+        **DATABASES_COMMON['default'],
+    }
+}
+
+DJANGO_ENV = 'production'
+
+if DJANGO_ENV == 'production':
+    DATABASES = DATABASES_PROD
+elif DJANGO_ENV == 'staging':
+    DATABASES = DATABASES_STAGE
+else:
+    DATABASES = DATABASES_COMMON
+
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

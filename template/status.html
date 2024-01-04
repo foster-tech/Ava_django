@@ -26,11 +26,17 @@
                                         </div>
                                         <h5>Tarefas e status</h5>
                                     </div>
-                                    <div style="position: relative; width: 300px; height: 300px; margin-right: 50px">
-                                        <canvas id="gaugeChart"></canvas>
-                                        <div id="pointer" style="position: absolute; width: 4px; height: 120px; background-color: black; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); transform-origin: bottom;"></div>
-                                        <div id="labelContainer" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                    <div class="d-flex justify-content-end" style="margin-right: 30px">
+                                        <div style="position: relative; width: 300px; height: 300px; margin-right: 50px">
+                                            <canvas id="gaugeChart"></canvas>
+                                            <div id="pointer" style="position: absolute; width: 4px; height: 120px; background-color: black; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); transform-origin: bottom;"></div>
+                                            <div id="labelContainer" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                        </div>
+                                        <div id="legendContainer" style="margin-top: 90px;">
+                                            <!-- As legendas serão adicionadas dinamicamente aqui -->
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div class="card">
                                     <button class="card-header p-2" style="background-color: #6ba39c; color: #fff; border:none" id="toggle-content" type="button" data-target="cardpreparacao-body">
@@ -975,6 +981,33 @@
             // Atualiza o gráfico para refletir as alterações na borda
             myGaugeChart.update();
         }
+
+        var legendContainer = document.getElementById('legendContainer');
+
+        // Rótulos personalizados para as legendas
+        var legendLabels = ['20%', '50%', '75%', '100%'];
+      
+        // Itera sobre os rótulos personalizados e adiciona as legendas
+        legendLabels.forEach((customLabel, index) => {
+          var legendItem = document.createElement('div');
+          legendItem.style.display = 'flex';
+          legendItem.style.alignItems = 'center';
+          legendItem.style.marginBottom = '5px';
+      
+          var legendColor = document.createElement('div');
+          legendColor.style.width = '20px';
+          legendColor.style.height = '20px';
+          legendColor.style.backgroundColor = data.datasets[0].backgroundColor[index];
+          legendColor.style.marginRight = '5px';
+      
+          var legendLabel = document.createElement('div');
+          legendLabel.textContent = customLabel;
+      
+          legendItem.appendChild(legendColor);
+          legendItem.appendChild(legendLabel);
+      
+          legendContainer.appendChild(legendItem);
+        });
 
         // Atualiza o ponteiro
         updatePointer();
