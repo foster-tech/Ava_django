@@ -69,13 +69,13 @@ def index(request):
         df.append(dict(Task=tarefa.nome, Start=data_i, Finish=data_f)) 
     
     
-    fig = ff.create_gantt(df, index_col=False, title=None, show_hover_fill=False)
+    # fig = ff.create_gantt(df, index_col=False, title=None, show_hover_fill=False)
     
-    fig.update_layout(
-    margin=dict(l=40, r=20, t=20, b=20),
-    )
+    # fig.update_layout(
+    # margin=dict(l=40, r=20, t=20, b=20),
+    # )
     
-    graph_html = fig.to_html(full_html=False, default_height=490, default_width='100%')
+    # graph_html = fig.to_html(full_html=False, default_height=490, default_width='100%')
     
     context = {
         'selected_ano': ano_atual,
@@ -86,7 +86,7 @@ def index(request):
         'ano_atual': ano_atual,
         'labelsStatus': labels, 
         'data': data,
-        'graph_html': graph_html, 
+        # 'graph_html': graph_html, 
         'anos': anos_disponiveis
         }
     
