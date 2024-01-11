@@ -25,8 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -114,10 +112,13 @@ DATABASES_STAGE = {
 
 DJANGO_ENV = 'production'
 
+
 if DJANGO_ENV == 'production':
+    DEBUG = False
     DATABASES = DATABASES_PROD
 elif DJANGO_ENV == 'staging':
     DATABASES = DATABASES_STAGE
+    DEBUG = True
 else:
     DATABASES = DATABASES_COMMON
 
