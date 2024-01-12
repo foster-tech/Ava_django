@@ -110,7 +110,7 @@ DATABASES_STAGE = {
     }
 }
 
-DJANGO_ENV = 'staging'
+DJANGO_ENV = 'production'
 
 
 if DJANGO_ENV == 'production':
