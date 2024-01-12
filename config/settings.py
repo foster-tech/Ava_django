@@ -25,8 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["avadjango-production.up.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://avadjango-production.up.railway.app/"]
+CSRF_ALLOWED_ORIGINS = ["https://avadjango-production.up.railway.app/"]
+CORS_ORIGINS_WHITELIST = ["https://avadjango-production.up.railway.app/"]
 
 
 # Application definition
@@ -122,7 +124,6 @@ elif DJANGO_ENV == 'staging':
 else:
     DATABASES = DATABASES_COMMON
 
-CSRF_TRUSTED_ORIGINS = ['https://*.avadjango-production.up.railway.app/','https://*.127.0.0.1']
 
 AUTH_PASSWORD_VALIDATORS = [
     {
