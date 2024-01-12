@@ -25,10 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
-ALLOWED_HOSTS = ["avadjango-production.up.railway.app"]
-CSRF_TRUSTED_ORIGINS = ["https://avadjango-production.up.railway.app/"]
-CSRF_ALLOWED_ORIGINS = ["https://avadjango-production.up.railway.app/"]
-CORS_ORIGINS_WHITELIST = ["https://avadjango-production.up.railway.app/"]
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -104,15 +102,15 @@ DATABASES_PROD = {
 
 DATABASES_STAGE = {
     'default': {
-        'NAME': os.environ.get('STAGE_DB_NAME', str(os.getenv('STAGE_NAME'))),
-        'USER': os.environ.get('STAGE_DB_USER', str(os.getenv('STAGE_USER'))),
-        'PASSWORD': os.environ.get('STAGE_DB_PASS', str(os.getenv('STAGE_PASSWORD'))),
-        'HOST': 'staging-database-host',
+        'NAME': 'ava-db',
+        'USER': 'postgres',
+        'PASSWORD': '332415',
+        'HOST': 'localhost',
         **DATABASES_COMMON['default'],
     }
 }
 
-DJANGO_ENV = 'production'
+DJANGO_ENV = 'staging'
 
 
 if DJANGO_ENV == 'production':
@@ -123,6 +121,7 @@ elif DJANGO_ENV == 'staging':
     DEBUG = True
 else:
     DATABASES = DATABASES_COMMON
+
 
 
 AUTH_PASSWORD_VALIDATORS = [
