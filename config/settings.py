@@ -122,7 +122,7 @@ elif DJANGO_ENV == 'staging':
 else:
     DATABASES = DATABASES_COMMON
 
-
+CSRF_TRUSTED_ORIGINS = ['https://*avadjango-production.up.railway.app/','https://*.127.0.0.1']
 
 AUTH_PASSWORD_VALIDATORS = [
     {
