@@ -8,7 +8,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
+
 """
+
+import mimetypes
+mimetypes.add_type("text/css", ".css", True)
 
 from pathlib import Path,os
 from dotenv import load_dotenv
@@ -167,3 +171,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'usuarios.CustomUser'
+
